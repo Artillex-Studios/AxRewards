@@ -1,0 +1,70 @@
+title: "&0Rewards"
+# a gui can only have 1-6 rows
+rows: 3
+# valid values: CHEST, WORKBENCH, HOPPER, DISPENSER, BREWING
+type: CHEST
+
+# ----- ITEMS -----
+
+example:
+  slot: 12
+  # in seconds
+  cooldown: 86400
+  claim-commands:
+    - "give %player% iron_ingot 1"
+  claimable:
+    material: "CHEST_MINECART"
+    name: "&#FFEE00&lᴇxᴀᴍᴘʟᴇ ʀᴇᴡᴀʀᴅ"
+    lore:
+      - " "
+      - "&#FFEE00Rewards:"
+      - " &7- &f1x Iron Ingot"
+      - " "
+      - "&#FFEE00&lClick &#DDDDDD» &#FFEEAAClaim"
+  unclaimable:
+    material: "MINECART"
+    name: "&#FFEE00&lᴇxᴀᴍᴘʟᴇ ʀᴇᴡᴀʀᴅ"
+    lore:
+      - " "
+      - "&#FFEE00Rewards:"
+      - " &7- &f1x Iron Ingot"
+      - " "
+      - "&#FFEE00&lCooldown &#DDDDDD» &#FFEEAA%time%"
+
+permission-example:
+  slot: 14
+  cooldown: 86400
+  # you can set the permission to any value, it does not have to start with axrewards
+  permission: "axrewards.permissionreward"
+  claim-commands:
+    - "give %player% diamond 1"
+  claimable:
+    material: "CHEST_MINECART"
+    name: "&#FFEE00&lᴇxᴀᴍᴘʟᴇ ᴘᴇʀᴍɪssɪᴏɴ ʀᴇᴡᴀʀᴅ"
+    lore:
+      - " "
+      - "&#FFEE00Rewards:"
+      - " &7- &f1x Diamond"
+      - " "
+      - "&#FFEE00&lClick &#DDDDDD» &#FFEEAAClaim"
+  unclaimable:
+    material: "MINECART"
+    name: "&#FFEE00&lᴇxᴀᴍᴘʟᴇ ᴘᴇʀᴍɪssɪᴏɴ ʀᴇᴡᴀʀᴅ"
+    lore:
+      - " "
+      - "&#FFEE00Rewards:"
+      - " &7- &f1x Diamond"
+      - " "
+      - "&#FFEE00&lCooldown &#DDDDDD» &#FFEEAA%time%"
+  no-permission:
+    material: "BARRIER"
+    name: "&#FFEE00&lᴇxᴀᴍᴘʟᴇ ᴘᴇʀᴍɪssɪᴏɴ ʀᴇᴡᴀʀᴅ"
+    lore:
+      - " "
+      - "&#FFEE00Rewards:"
+      - " &7- &f1x Diamond"
+      - " "
+      - "&#FFEE00&lRequired permission &#DDDDDD» &#FFEEAA%permission%"
+
+# do not change this
+version: 1

@@ -1,0 +1,20 @@
+name: AxRewards
+version: '${project.version}'
+main: com.artillexstudios.axrewards.AxRewards
+api-version: '1.13'
+folia-supported: true
+
+permissions:
+  axrewards.reload:
+    default: op
+  axrewards.reset:
+    default: op
+  axrewards.forceopen:
+    default: op
+  axrewards.open:
+    default: true
+  axrewards.help:
+    default: true
+
+softdepend:
+  - PlaceholderAPI

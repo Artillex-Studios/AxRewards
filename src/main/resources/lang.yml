@@ -1,0 +1,34 @@
+help:
+  - " "
+  - "&#FFEE00&lAxRewards &7»"
+  - " &7- &f/axrewards &7| &#FFEE00Open menu"
+  - " &7- &f/axrewards reload &7| &#FFEE00Reload plugin"
+  - " &7- &f/axrewards reset <player> &7| &#FFEE00Reset cooldowns of player"
+  - " &7- &f/axrewards forceopen <player> &7| &#FFEE00Open the gui for a player"
+  - " "
+
+reload:
+  success: "&#33FF33Plugin successfully reloaded!"
+  failed: "&#FF3333Failed to reload the plugin! Something is wrong in the &f%file%&#FF3333 file, look in the console or use a yaml validator to fix the errors!"
+
+no-permission:
+  message: "&#FF0000You can't claim this reward, because you are lacking the permission &f%permission%&#FF0000!"
+  # list of sounds: https://www.digminecraft.com/lists/sound_list_pc.php
+  # the sound played when clicking this item
+  # set to "" to disable
+  sound: "block.anvil.land"
+
+on-cooldown:
+  message: "&#FF0000You can't claim this reward for &f%time%&#FF0000!"
+  sound: "block.anvil.land"
+
+claimed:
+  message: "&#00FF00You can successfully claimed the reward!"
+  sound: "entity.player.levelup"
+
+reset:
+  single: "&#00FF00You have successfully reset the cooldown for the reward &f%name% &#00FF00of &f%player%&#00FF00!"
+  all: "&#00FF00You have successfully reset all cooldowns for &f%player%&#00FF00!"
+
+# do not change this
+version: 1
