@@ -28,7 +28,7 @@ import static com.artillexstudios.axrewards.AxRewards.MESSAGEUTILS;
 public class Commands {
 
     @DefaultFor({"~", "~ open"})
-    @CommandPermission(value = "axrewards.reset", defaultAccess = PermissionDefault.TRUE)
+    @CommandPermission(value = "axrewards.open", defaultAccess = PermissionDefault.TRUE)
     public void open(@NotNull Player sender) {
         AxRewards.getThreadedQueue().submit(() -> new MainGui(sender).open());
     }

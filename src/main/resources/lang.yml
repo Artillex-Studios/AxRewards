@@ -30,5 +30,11 @@ reset:
   single: "&#00FF00You have successfully reset the cooldown for the reward &f%name% &#00FF00of &f%player%&#00FF00!"
   all: "&#00FF00You have successfully reset all cooldowns for &f%player%&#00FF00!"
 
+time:
+  second: "s"
+  minute: "m"
+  hour: "h"
+  day: "d"
+
 # do not change this
 version: 1

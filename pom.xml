@@ -45,23 +45,23 @@
                             <relocations>
                                 <relocation>
                                     <pattern>com.artillexstudios.axapi</pattern>
-                                    <shadedPattern>com.artillexstudios.axboosters.libs.axapi</shadedPattern>
+                                    <shadedPattern>com.artillexstudios.axrewards.libs.axapi</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.bstats</pattern>
-                                    <shadedPattern>com.artillexstudios.axboosters.libs.bstats</shadedPattern>
+                                    <shadedPattern>com.artillexstudios.axrewards.libs.bstats</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>dev.triumphteam.gui</pattern>
-                                    <shadedPattern>com.artillexstudios.axboosters.libs.gui</shadedPattern>
+                                    <shadedPattern>com.artillexstudios.axrewards.libs.gui</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>net.kyori.adventure</pattern>
-                                    <shadedPattern>com.artillexstudios.axboosters.libs.kyori</shadedPattern>
+                                    <shadedPattern>com.artillexstudios.axrewards.libs.kyori</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>revxrsal.commands</pattern>
-                                    <shadedPattern>com.artillexstudios.axboosters.libs.lamp</shadedPattern>
+                                    <shadedPattern>com.artillexstudios.axrewards.libs.lamp</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
