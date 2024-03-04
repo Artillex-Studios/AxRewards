@@ -24,6 +24,7 @@ import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
+import revxrsal.commands.orphan.Orphans;
 
 import java.io.File;
 
@@ -89,11 +90,7 @@ public final class AxRewards extends AxPlugin {
 
         new GuiUpdater().start();
 
-        final BukkitCommandHandler handler = BukkitCommandHandler.create(this);
-        handler.getAutoCompleter().registerSuggestion("players", (args, sender, command) -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
-        handler.getAutoCompleter().registerSuggestion("rewards", (args, sender, command) -> GUIS.getBackingDocument().getRoutesAsStrings(false).stream().filter(string -> GUIS.getSection(string) != null).toList());
-        handler.register(new Commands());
-        handler.registerBrigadier();
+        Commands.registerCommand();
 
         Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFEE00[AxRewards] Loaded plugin! Using &f" + database.getType() + " &#FFEE00database to store data!"));
     }

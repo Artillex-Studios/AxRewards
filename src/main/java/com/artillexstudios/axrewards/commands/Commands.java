@@ -11,11 +11,13 @@ import org.bukkit.permissions.PermissionDefault;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import revxrsal.commands.annotation.AutoComplete;
-import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.DefaultFor;
 import revxrsal.commands.annotation.Optional;
 import revxrsal.commands.annotation.Subcommand;
+import revxrsal.commands.bukkit.BukkitCommandHandler;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
+import revxrsal.commands.orphan.OrphanCommand;
+import revxrsal.commands.orphan.Orphans;
 
 import java.util.Map;
 
@@ -24,8 +26,7 @@ import static com.artillexstudios.axrewards.AxRewards.GUIS;
 import static com.artillexstudios.axrewards.AxRewards.LANG;
 import static com.artillexstudios.axrewards.AxRewards.MESSAGEUTILS;
 
-@Command({"axrewards", "axreward", "reward", "rewards"})
-public class Commands {
+public class Commands implements OrphanCommand {
 
     @DefaultFor({"~", "~ open"})
     @CommandPermission(value = "axrewards.open", defaultAccess = PermissionDefault.TRUE)
@@ -63,6 +64,8 @@ public class Commands {
         }
         Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFEE00╠ &#FFEEAAReloaded &fguis.yml&#FFEEAA!"));
 
+        Commands.registerCommand();
+
         Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFEE00╚ &#FFEEAASuccessful reload!"));
         MESSAGEUTILS.sendLang(sender, "reload.success");
     }
@@ -81,5 +84,14 @@ public class Commands {
     @CommandPermission("axrewards.forceopen")
     public void forceopen(@NotNull CommandSender sender, Player player) {
         new MainGui(player).open();
+    }
+
+    public static void registerCommand() {
+        final BukkitCommandHandler handler = BukkitCommandHandler.create(AxRewards.getInstance());
+        handler.unregisterAllCommands();
+        handler.getAutoCompleter().registerSuggestion("players", (args, sender, command) -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
+        handler.getAutoCompleter().registerSuggestion("rewards", (args, sender, command) -> GUIS.getBackingDocument().getRoutesAsStrings(false).stream().filter(string -> GUIS.getSection(string) != null).toList());
+        handler.register(Orphans.path(CONFIG.getStringList("command-aliases").toArray(String[]::new)).handler(new Commands()));
+        handler.registerBrigadier();
     }
 }

@@ -24,5 +24,13 @@ database:
 # 3 - text format, for example 01h 25m 35s
 timer-format: 1
 
+# you must define at least 1
+# reloading will add new commands, however a restart is recommended when editing this
+command-aliases:
+ - "axrewards"
+ - "axreward"
+ - "reward"
+ - "rewards"
+
 # do not change this
-version: 1
+version: 2
