@@ -16,15 +16,12 @@ import com.artillexstudios.axrewards.database.impl.H2;
 import com.artillexstudios.axrewards.database.impl.MySQL;
 import com.artillexstudios.axrewards.database.impl.PostgreSQL;
 import com.artillexstudios.axrewards.database.impl.SQLite;
-import com.artillexstudios.axrewards.libraries.Libraries;
 import com.artillexstudios.axrewards.guis.GuiUpdater;
+import com.artillexstudios.axrewards.libraries.Libraries;
 import net.byteflux.libby.BukkitLibraryManager;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import revxrsal.commands.bukkit.BukkitCommandHandler;
-import revxrsal.commands.orphan.Orphans;
 
 import java.io.File;
 

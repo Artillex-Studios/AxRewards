@@ -6,6 +6,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -48,7 +49,7 @@ public class PostgreSQL implements Database {
                         );
                 """;
 
-        try (PreparedStatement stmt = dataSource.getConnection().prepareStatement(CREATE_TABLE)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(CREATE_TABLE)) {
             stmt.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -59,7 +60,7 @@ public class PostgreSQL implements Database {
     public void claimReward(@NotNull UUID uuid, String name) {
         resetReward(uuid, name);
         final String sql = "INSERT INTO axrewards_claimed(uuid, reward, time) VALUES (?, ?, ?);";
-        try (PreparedStatement stmt = dataSource.getConnection().prepareStatement(sql)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, uuid.toString());
             stmt.setString(2, name);
             stmt.setLong(3, System.currentTimeMillis());
@@ -73,7 +74,7 @@ public class PostgreSQL implements Database {
     public void resetReward(@NotNull UUID uuid, @Nullable String name) {
         if (name == null) {
             final String sql = "DELETE FROM axrewards_claimed WHERE uuid = ?;";
-            try (PreparedStatement stmt = dataSource.getConnection().prepareStatement(sql)) {
+            try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, uuid.toString());
                 stmt.executeUpdate();
             } catch (Exception ex) {
@@ -81,7 +82,7 @@ public class PostgreSQL implements Database {
             }
         } else {
             final String sql = "DELETE FROM axrewards_claimed WHERE uuid = ? AND reward = ? LIMIT 1;";
-            try (PreparedStatement stmt = dataSource.getConnection().prepareStatement(sql)) {
+            try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
                 stmt.setString(1, uuid.toString());
                 stmt.setString(2, name);
                 stmt.executeUpdate();
@@ -94,7 +95,7 @@ public class PostgreSQL implements Database {
     @Override
     public long getLastClaimed(@NotNull UUID uuid, String name) {
         final String sql = "SELECT time FROM axrewards_claimed WHERE uuid = ? AND reward = ? LIMIT 1;";
-        try (PreparedStatement stmt = dataSource.getConnection().prepareStatement(sql)) {
+        try (Connection conn = dataSource.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, uuid.toString());
             stmt.setString(2, name);
 
