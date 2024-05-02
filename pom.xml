@@ -6,7 +6,7 @@
 
     <groupId>com.artillexstudios</groupId>
     <artifactId>AxRewards</artifactId>
-    <version>1.1.1</version>
+    <version>1.2.0</version>
     <packaging>jar</packaging>
 
     <name>AxRewards</name>
@@ -33,7 +33,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.5.3</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -56,12 +56,16 @@
                                     <shadedPattern>com.artillexstudios.axrewards.libs.gui</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>net.kyori.adventure</pattern>
+                                    <pattern>net.kyori</pattern>
                                     <shadedPattern>com.artillexstudios.axrewards.libs.kyori</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>revxrsal.commands</pattern>
                                     <shadedPattern>com.artillexstudios.axrewards.libs.lamp</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.zaxxer.hikari</pattern>
+                                    <shadedPattern>com.artillexstudios.axrewards.libs.hikari</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>
@@ -104,19 +108,15 @@
         <dependency>
             <groupId>com.artillexstudios.axapi</groupId>
             <artifactId>axapi</artifactId>
-            <version>1.4.39</version>
+            <version>1.4.188</version>
             <scope>compile</scope>
+            <classifier>all</classifier>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>1.13.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.byteflux</groupId>
-            <artifactId>libby-bukkit</artifactId>
-            <version>1.2.0</version>
         </dependency>
         <dependency>
             <groupId>org.xerial</groupId>
@@ -139,13 +139,37 @@
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
-            <version>2.11.3</version>
+            <version>2.11.5</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
             <version>3.0.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-platform-bukkit</artifactId>
+            <version>4.3.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-text-minimessage</artifactId>
+            <version>4.16.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-text-serializer-legacy</artifactId>
+            <version>4.16.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-api</artifactId>
+            <version>4.16.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -163,8 +187,8 @@
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>5.0.1</version>
-            <scope>provided</scope>
+            <version>5.1.0</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

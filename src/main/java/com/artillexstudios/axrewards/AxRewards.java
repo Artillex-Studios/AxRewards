@@ -8,6 +8,7 @@ import com.artillexstudios.axapi.libs.boostedyaml.boostedyaml.settings.dumper.Du
 import com.artillexstudios.axapi.libs.boostedyaml.boostedyaml.settings.general.GeneralSettings;
 import com.artillexstudios.axapi.libs.boostedyaml.boostedyaml.settings.loader.LoaderSettings;
 import com.artillexstudios.axapi.libs.boostedyaml.boostedyaml.settings.updater.UpdaterSettings;
+import com.artillexstudios.axapi.libs.libby.BukkitLibraryManager;
 import com.artillexstudios.axapi.utils.MessageUtils;
 import com.artillexstudios.axapi.utils.StringUtils;
 import com.artillexstudios.axrewards.commands.Commands;
@@ -18,7 +19,6 @@ import com.artillexstudios.axrewards.database.impl.PostgreSQL;
 import com.artillexstudios.axrewards.database.impl.SQLite;
 import com.artillexstudios.axrewards.guis.GuiUpdater;
 import com.artillexstudios.axrewards.libraries.Libraries;
-import net.byteflux.libby.BukkitLibraryManager;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
