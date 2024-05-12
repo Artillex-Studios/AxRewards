@@ -86,7 +86,7 @@ public class Commands implements OrphanCommand {
         new MainGui(player).open();
     }
 
-    public static void registerCommand() {
+    public static void registerCommand() { // todo: fix unregister
         final BukkitCommandHandler handler = BukkitCommandHandler.create(AxRewards.getInstance());
         handler.unregisterAllCommands();
         handler.getAutoCompleter().registerSuggestion("players", (args, sender, command) -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());

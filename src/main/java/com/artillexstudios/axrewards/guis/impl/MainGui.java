@@ -71,6 +71,14 @@ public class MainGui extends GuiFrame {
             });
         }
 
+        if (GUIS.getSection("close") != null) {
+            super.createItem("close", "close", event -> {
+                Scheduler.get().runAt(player.getLocation(), scheduledTask -> {
+                    player.closeInventory();
+                });
+            });
+        }
+
         if (opened) {
             gui.update();
             return;

@@ -6,8 +6,16 @@ type: CHEST
 
 # ----- ITEMS -----
 
+close:
+  slot: 22
+  material: "BARRIER"
+  name: "&#FFEE00&lᴄʟᴏsᴇ"
+  lore:
+    - " "
+    - "&#FFEE00&lClick &#DDDDDD» &#FFEEAAClose Gui"
+
 example:
-  slot: 12
+  slot: 11
   # in seconds
   cooldown: 86400
   claim-commands:
@@ -32,7 +40,7 @@ example:
       - "&#FFEE00&lCooldown &#DDDDDD» &#FFEEAA%time%"
 
 permission-example:
-  slot: 14
+  slot: 15
   cooldown: 86400
   # you can set the permission to any value, it does not have to start with axrewards
   permission: "axrewards.permissionreward"

@@ -18,6 +18,7 @@ import com.artillexstudios.axrewards.database.impl.MySQL;
 import com.artillexstudios.axrewards.database.impl.PostgreSQL;
 import com.artillexstudios.axrewards.database.impl.SQLite;
 import com.artillexstudios.axrewards.guis.GuiUpdater;
+import com.artillexstudios.axrewards.hooks.PlaceholderAPIHook;
 import com.artillexstudios.axrewards.libraries.Libraries;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
@@ -84,6 +85,11 @@ public final class AxRewards extends AxPlugin {
         }
 
         database.setup();
+
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new PlaceholderAPIHook().register();
+            Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFEE00[AxRewards] Hooked into PlaceholderAPI!"));
+        }
 
         new GuiUpdater().start();
 
