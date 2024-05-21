@@ -49,7 +49,6 @@ public final class AxRewards extends AxPlugin {
     }
 
     public void load() {
-
         BukkitLibraryManager libraryManager = new BukkitLibraryManager(this, "libraries");
         libraryManager.addMavenCentral();
         libraryManager.addJitPack();
@@ -91,10 +90,15 @@ public final class AxRewards extends AxPlugin {
             Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFEE00[AxRewards] Hooked into PlaceholderAPI!"));
         }
 
-        new GuiUpdater().start();
+        GuiUpdater.start();
 
         Commands.registerCommand();
 
         Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFEE00[AxRewards] Loaded plugin! Using &f" + database.getType() + " &#FFEE00database to store data!"));
+    }
+
+    public void disable() {
+        GuiUpdater.stop();
+        database.disable();
     }
 }

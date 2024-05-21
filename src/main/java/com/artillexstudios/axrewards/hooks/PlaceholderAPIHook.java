@@ -8,8 +8,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import static com.artillexstudios.axrewards.AxRewards.GUIS;
-import static com.artillexstudios.axrewards.AxRewards.LANG;
-import static com.artillexstudios.axrewards.AxRewards.MESSAGEUTILS;
 
 public class PlaceholderAPIHook extends PlaceholderExpansion {
 
@@ -39,6 +37,7 @@ public class PlaceholderAPIHook extends PlaceholderExpansion {
     @Override
     public String onRequest(OfflinePlayer offlinePlayer, @NotNull String params) {
 
+        if (offlinePlayer == null) return "---";
         final Player player = offlinePlayer.getPlayer();
         if (player == null) return "---";
 

@@ -36,11 +36,11 @@ public class GuiFrame {
     }
 
     protected ItemStack buildItem(@NotNull String key) {
-        return ItemBuilderUtil.newBuilder(file.getSection(key)).get();
+        return ItemBuilderUtil.newBuilder(player, file.getSection(key)).get();
     }
 
     protected ItemStack buildItem(@NotNull String key, Map<String, String> replacements) {
-        return ItemBuilderUtil.newBuilder(file.getSection(key), replacements).get();
+        return ItemBuilderUtil.newBuilder(player, file.getSection(key), replacements).get();
     }
 
     protected void createItem(@NotNull String route, String prevRoute) {
