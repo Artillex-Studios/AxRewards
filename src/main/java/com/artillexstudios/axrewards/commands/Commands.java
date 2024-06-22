@@ -1,11 +1,16 @@
 package com.artillexstudios.axrewards.commands;
 
+import com.artillexstudios.axapi.nms.NMSHandlers;
+import com.artillexstudios.axapi.reflection.FastFieldAccessor;
 import com.artillexstudios.axapi.utils.StringUtils;
 import com.artillexstudios.axrewards.AxRewards;
 import com.artillexstudios.axrewards.guis.impl.MainGui;
+import com.artillexstudios.axrewards.utils.CommandMessages;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Warning;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionDefault;
 import org.jetbrains.annotations.NotNull;
@@ -14,12 +19,16 @@ import revxrsal.commands.annotation.AutoComplete;
 import revxrsal.commands.annotation.DefaultFor;
 import revxrsal.commands.annotation.Optional;
 import revxrsal.commands.annotation.Subcommand;
+import revxrsal.commands.bukkit.BukkitCommandActor;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
+import revxrsal.commands.bukkit.exception.InvalidPlayerException;
 import revxrsal.commands.orphan.OrphanCommand;
 import revxrsal.commands.orphan.Orphans;
 
+import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.artillexstudios.axrewards.AxRewards.CONFIG;
 import static com.artillexstudios.axrewards.AxRewards.GUIS;
@@ -72,7 +81,7 @@ public class Commands implements OrphanCommand {
 
     @Subcommand("reset")
     @CommandPermission("axrewards.reset")
-    @AutoComplete("@players @rewards")
+    @AutoComplete("* @rewards")
     public void reset(@NotNull CommandSender sender, @NotNull OfflinePlayer player, @Optional @Nullable String name) {
         final Map<String, String> replacements = Map.of("%name%", name == null ? "---" : name, "%player%", player.getName() == null ? "---" : player.getName());
         if (name == null) MESSAGEUTILS.sendLang(sender, "reset.all", replacements);
@@ -86,11 +95,34 @@ public class Commands implements OrphanCommand {
         new MainGui(player).open();
     }
 
-    public static void registerCommand() { // todo: fix unregister
-        final BukkitCommandHandler handler = BukkitCommandHandler.create(AxRewards.getInstance());
+    private static BukkitCommandHandler handler = null;
+
+    public static void registerCommand() {
+        if (handler == null) {
+            Warning.WarningState prevState = Bukkit.getWarningState();
+            FastFieldAccessor accessor = FastFieldAccessor.forClassField(Bukkit.getServer().getClass().getPackage().getName() + ".CraftServer", "warningState");
+            accessor.set(Bukkit.getServer(), Warning.WarningState.OFF);
+            handler = BukkitCommandHandler.create(AxRewards.getInstance());
+            accessor.set(Bukkit.getServer(), prevState);
+            handler.getAutoCompleter().registerSuggestion("rewards", (args, sender, command) -> GUIS.getBackingDocument().getRoutesAsStrings(false).stream().filter(string -> GUIS.getSection(string) != null).toList());
+
+            handler.registerValueResolver(0, OfflinePlayer.class, context -> {
+                String value = context.pop();
+                if (value.equalsIgnoreCase("self") || value.equalsIgnoreCase("me")) return ((BukkitCommandActor) context.actor()).requirePlayer();
+                OfflinePlayer player = NMSHandlers.getNmsHandler().getCachedOfflinePlayer(value);
+                if (player == null && !(player = Bukkit.getOfflinePlayer(value)).hasPlayedBefore()) throw new InvalidPlayerException(context.parameter(), value);
+                return player;
+            });
+
+            handler.getAutoCompleter().registerParameterSuggestions(OfflinePlayer.class, (args, sender, command) -> {
+                return Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).collect(Collectors.toSet());
+            });
+
+            handler.getTranslator().add(new CommandMessages());
+            handler.setLocale(new Locale("en", "US"));
+        }
+
         handler.unregisterAllCommands();
-        handler.getAutoCompleter().registerSuggestion("players", (args, sender, command) -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
-        handler.getAutoCompleter().registerSuggestion("rewards", (args, sender, command) -> GUIS.getBackingDocument().getRoutesAsStrings(false).stream().filter(string -> GUIS.getSection(string) != null).toList());
         handler.register(Orphans.path(CONFIG.getStringList("command-aliases").toArray(String[]::new)).handler(new Commands()));
         handler.registerBrigadier();
     }

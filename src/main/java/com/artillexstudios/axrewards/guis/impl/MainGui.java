@@ -1,6 +1,7 @@
 package com.artillexstudios.axrewards.guis.impl;
 
 import com.artillexstudios.axapi.libs.boostedyaml.boostedyaml.block.implementation.Section;
+import com.artillexstudios.axapi.nms.NMSHandlers;
 import com.artillexstudios.axapi.scheduler.Scheduler;
 import com.artillexstudios.axapi.utils.StringUtils;
 import com.artillexstudios.axrewards.AxRewards;
@@ -10,10 +11,15 @@ import com.artillexstudios.axrewards.utils.TimeUtils;
 import dev.triumphteam.gui.components.GuiType;
 import dev.triumphteam.gui.guis.BaseGui;
 import dev.triumphteam.gui.guis.Gui;
+import me.clip.placeholderapi.PlaceholderAPI;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
 
 import static com.artillexstudios.axrewards.AxRewards.GUIS;
@@ -21,14 +27,18 @@ import static com.artillexstudios.axrewards.AxRewards.LANG;
 import static com.artillexstudios.axrewards.AxRewards.MESSAGEUTILS;
 
 public class MainGui extends GuiFrame {
-    private static final WeakHashMap<MainGui, Void> map = new WeakHashMap<>();
-    private boolean opened = false;
-    private final BaseGui gui = Gui.gui(GuiType.valueOf(GUIS.getString("type", "CHEST"))).disableAllInteractions().title(StringUtils.format(GUIS.getString("title"))).rows(GUIS.getInt("rows", 6)).create();
+    private static final Set<MainGui> openMenus = Collections.newSetFromMap(new WeakHashMap<>());
+    private final BaseGui gui = Gui
+            .gui(GuiType.valueOf(GUIS.getString("type", "CHEST")))
+            .disableAllInteractions()
+            .title(Component.empty())
+            .rows(GUIS.getInt("rows", 6))
+            .create();
 
     public MainGui(Player player) {
         super(GUIS, player);
+        gui.updateTitle(StringUtils.formatToString(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") == null ? GUIS.getString("title") : PlaceholderAPI.setPlaceholders(player, GUIS.getString("title"))));
         setGui(gui);
-        map.put(this, null);
     }
 
     public void open() {
@@ -79,19 +89,30 @@ public class MainGui extends GuiFrame {
             });
         }
 
-        if (opened) {
+        if (openMenus.contains(this)) {
             gui.update();
+            updateTitle();
             return;
         }
-        opened = true;
+        openMenus.add(this);
 
         final MainGui mainGui = this;
-        gui.setCloseGuiAction(inventoryCloseEvent -> map.remove(mainGui));
+        gui.setCloseGuiAction(inventoryCloseEvent -> openMenus.remove(mainGui));
 
         Scheduler.get().run(scheduledTask -> gui.open(player));
     }
 
-    public static WeakHashMap<MainGui, Void> getMap() {
-        return map;
+    public void updateTitle() {
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") == null) return;
+        Component title = StringUtils.format(PlaceholderAPI.setPlaceholders(player, GUIS.getString("title")));
+
+        final Inventory topInv = player.getPlayer().getOpenInventory().getTopInventory();
+        if (topInv.equals(gui.getInventory())) {
+            NMSHandlers.getNmsHandler().setTitle(player.getPlayer().getOpenInventory().getTopInventory(), title);
+        }
+    }
+
+    public static Set<MainGui> getOpenMenus() {
+        return openMenus;
     }
 }

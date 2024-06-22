@@ -15,7 +15,9 @@ public class GuiUpdater {
 
         future = Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
             try {
-                MainGui.getMap().forEach((key, value) -> key.open());
+                for (MainGui gui : MainGui.getOpenMenus()) {
+                    gui.open();
+                }
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
