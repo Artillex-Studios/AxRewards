@@ -20,6 +20,7 @@ import com.artillexstudios.axrewards.database.impl.SQLite;
 import com.artillexstudios.axrewards.guis.GuiUpdater;
 import com.artillexstudios.axrewards.hooks.PlaceholderAPIHook;
 import com.artillexstudios.axrewards.libraries.Libraries;
+import com.artillexstudios.axrewards.utils.UpdateNotifier;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -95,6 +96,8 @@ public final class AxRewards extends AxPlugin {
         Commands.registerCommand();
 
         Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFEE00[AxRewards] Loaded plugin! Using &f" + database.getType() + " &#FFEE00database to store data!"));
+
+        if (CONFIG.getBoolean("update-notifier.enabled", true)) new UpdateNotifier(this, 5549);
     }
 
     public void disable() {
