@@ -1,8 +1,17 @@
+# DOCUMENTATION: https://docs.artillex-studios.com/axrewards.html
+# ITEM BUILDER: https://docs.artillex-studios.com/item-builder.html
+
+# ----- SETTINGS -----
+
 title: "&0Rewards"
 # a gui can only have 1-6 rows
 rows: 3
 # valid values: CHEST, WORKBENCH, HOPPER, DISPENSER, BREWING
 type: CHEST
+
+open-commands:
+  - "reward"
+  - "rewards"
 
 # ----- ITEMS -----
 
@@ -17,6 +26,7 @@ close:
 example:
   slot: 11
   # in seconds
+  # you can set it to -1 for it to never automatically refresh
   cooldown: 86400
   claim-commands:
     - "give %player% iron_ingot 1"
@@ -73,6 +83,3 @@ permission-example:
       - " &7- &f1x Diamond"
       - " "
       - "&#FFEE00&lRequired permission &#DDDDDD» &#FFEEAA%permission%"
-
-# do not change this
-version: 1

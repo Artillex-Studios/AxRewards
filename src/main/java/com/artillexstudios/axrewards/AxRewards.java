@@ -18,8 +18,10 @@ import com.artillexstudios.axrewards.database.impl.MySQL;
 import com.artillexstudios.axrewards.database.impl.PostgreSQL;
 import com.artillexstudios.axrewards.database.impl.SQLite;
 import com.artillexstudios.axrewards.guis.GuiUpdater;
+import com.artillexstudios.axrewards.guis.impl.GuiManager;
 import com.artillexstudios.axrewards.hooks.PlaceholderAPIHook;
 import com.artillexstudios.axrewards.libraries.Libraries;
+import com.artillexstudios.axrewards.utils.FileUtils;
 import com.artillexstudios.axrewards.utils.UpdateNotifier;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
@@ -30,7 +32,6 @@ import java.io.File;
 public final class AxRewards extends AxPlugin {
     public static Config CONFIG;
     public static Config LANG;
-    public static Config GUIS;
     public static MessageUtils MESSAGEUTILS;
     private static AxPlugin instance;
     private static ThreadedQueue<Runnable> threadedQueue;
@@ -50,7 +51,7 @@ public final class AxRewards extends AxPlugin {
     }
 
     public void load() {
-        BukkitLibraryManager libraryManager = new BukkitLibraryManager(this, "libraries");
+        BukkitLibraryManager libraryManager = new BukkitLibraryManager(this, "lib");
         libraryManager.addMavenCentral();
         libraryManager.addJitPack();
         libraryManager.addRepository("https://repo.codemc.org/repository/maven-public/");
@@ -68,7 +69,6 @@ public final class AxRewards extends AxPlugin {
         new Metrics(this, pluginId);
 
         CONFIG = new Config(new File(getDataFolder(), "config.yml"), getResource("config.yml"), GeneralSettings.builder().setUseDefaults(false).build(), LoaderSettings.builder().setAutoUpdate(true).build(), DumperSettings.DEFAULT, UpdaterSettings.builder().setKeepAll(true).setVersioning(new BasicVersioning("version")).build());
-        GUIS = new Config(new File(getDataFolder(), "guis.yml"), getResource("guis.yml"), GeneralSettings.builder().setUseDefaults(false).build(), LoaderSettings.builder().setAutoUpdate(true).build(), DumperSettings.DEFAULT, UpdaterSettings.builder().setKeepAll(true).setVersioning(new BasicVersioning("version")).build());
         LANG = new Config(new File(getDataFolder(), "lang.yml"), getResource("lang.yml"), GeneralSettings.builder().setUseDefaults(false).build(), LoaderSettings.builder().setAutoUpdate(true).build(), DumperSettings.DEFAULT, UpdaterSettings.builder().setKeepAll(true).setVersioning(new BasicVersioning("version")).build());
 
         MESSAGEUTILS = new MessageUtils(LANG.getBackingDocument(), "prefix", CONFIG.getBackingDocument());
@@ -76,6 +76,15 @@ public final class AxRewards extends AxPlugin {
         threadedQueue = new ThreadedQueue<>("AxRewards-Datastore-thread");
 
         BUKKITAUDIENCES = BukkitAudiences.create(this);
+
+        if (FileUtils.PLUGIN_DIRECTORY.resolve("menus/").toFile().mkdirs()) {
+            if (new File(getDataFolder(), "guis.yml").exists())
+                new ConverterV2();
+            else
+                FileUtils.copyFromResource("menus");
+        }
+
+        GuiManager.reload();
 
         switch (CONFIG.getString("database.type").toLowerCase()) {
             case "sqlite" -> database = new SQLite();

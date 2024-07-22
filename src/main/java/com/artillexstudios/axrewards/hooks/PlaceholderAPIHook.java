@@ -1,13 +1,10 @@
 package com.artillexstudios.axrewards.hooks;
 
-import com.artillexstudios.axapi.libs.boostedyaml.boostedyaml.block.implementation.Section;
-import com.artillexstudios.axrewards.AxRewards;
+import com.artillexstudios.axrewards.guis.impl.GuiManager;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-
-import static com.artillexstudios.axrewards.AxRewards.GUIS;
 
 public class PlaceholderAPIHook extends PlaceholderExpansion {
 
@@ -36,26 +33,22 @@ public class PlaceholderAPIHook extends PlaceholderExpansion {
 
     @Override
     public String onRequest(OfflinePlayer offlinePlayer, @NotNull String params) {
+        String[] args = params.split("_");
 
         if (offlinePlayer == null) return "---";
         final Player player = offlinePlayer.getPlayer();
         if (player == null) return "---";
 
-        if (params.equalsIgnoreCase("collectable")) {
+        if (args.length == 1 && args[0].equalsIgnoreCase("collectable")) {
             int am = 0;
-            for (String str : GUIS.getBackingDocument().getRoutesAsStrings(false)) {
-                final Section section = GUIS.getSection(str);
-                if (section == null) continue;
-
-                final String permission = section.getString("permission", null);
-                if (permission != null && !player.hasPermission(permission)) continue;
-
-                final long lastClaim = AxRewards.getDatabase().getLastClaimed(player.getUniqueId(), str);
-                final long claimCooldown = section.getLong("cooldown") * 1_000L;
-                if (lastClaim > System.currentTimeMillis() - claimCooldown) continue;
-                am++;
+            for (String s : GuiManager.getMenus().keySet()) {
+                am += GuiManager.getClaimable(player, s);
             }
             return "" + am;
+        }
+
+        if (args.length == 2 && args[0].equalsIgnoreCase("collectable")) {
+            return "" + GuiManager.getClaimable(player, args[1]);
         }
 
         return null;

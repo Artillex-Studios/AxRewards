@@ -1,10 +1,12 @@
+# DOCUMENTATION: https://docs.artillex-studios.com/axrewards.html
+
 help:
   - " "
   - "&#FFEE00&lAxRewards &7»"
-  - " &7- &f/axrewards &7| &#FFEE00Open menu"
+  - " &7- &f/axrewards open [menu] &7| &#FFEE00Open menu"
   - " &7- &f/axrewards reload &7| &#FFEE00Reload plugin"
-  - " &7- &f/axrewards reset <player> &7| &#FFEE00Reset cooldowns of player"
-  - " &7- &f/axrewards forceopen <player> &7| &#FFEE00Open the gui for a player"
+  - " &7- &f/axrewards reset <player> [menu] [reward] &7| &#FFEE00Reset cooldowns of player"
+  - " &7- &f/axrewards forceopen <player> [menu] [bypass] &7| &#FFEE00Open the gui for a player"
   - " "
 
 reload:
@@ -20,6 +22,7 @@ no-permission:
 
 on-cooldown:
   message: "&#FF0000You can't claim this reward for &f%time%&#FF0000!"
+  one-time: "&#FF0000You have already claimed this reward!"
   sound: "block.anvil.land"
 
 claimed:
@@ -36,6 +39,10 @@ time:
   hour: "h"
   day: "d"
 
+errors:
+  no-menus: "&#FF0000There are no menus configured!"
+  no-open-permission: "&#FF0000You don't have a permission to open the %menu% menu!"
+
 commands:
   invalid-value: "&#FF0000Invalid parameter: &#BB0000%value%"
   invalid-command: "&#FF0000Invalid command or subcommand!"
@@ -49,4 +56,4 @@ commands:
 update-notifier: "&#FFEE88There is a new version of the plugin available! &#DDDDDD(&#FFFFFFcurrent: &#FF0000%current% &#DDDDDD| &#FFFFFFlatest: &#00FF00%latest%&#DDDDDD)"
 
 # do not change this
-version: 3
+version: 4

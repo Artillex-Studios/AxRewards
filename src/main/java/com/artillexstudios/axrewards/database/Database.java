@@ -11,11 +11,11 @@ public interface Database {
 
     void setup();
 
-    void claimReward(@NotNull UUID uuid, String name);
+    void claimReward(@NotNull UUID uuid, String menu, String reward);
 
-    void resetReward(@NotNull UUID uuid, @Nullable String name);
+    void resetReward(@NotNull UUID uuid, @Nullable String menu, @Nullable String reward);
 
-    long getLastClaimed(@NotNull UUID uuid, String name);
+    long getLastClaimed(@NotNull UUID uuid, String menu, String reward);
 
     void disable();
 }

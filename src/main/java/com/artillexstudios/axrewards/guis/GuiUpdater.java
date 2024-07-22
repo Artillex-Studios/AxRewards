@@ -1,6 +1,6 @@
 package com.artillexstudios.axrewards.guis;
 
-import com.artillexstudios.axrewards.guis.impl.MainGui;
+import com.artillexstudios.axrewards.guis.impl.RewardGui;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledFuture;
@@ -15,7 +15,7 @@ public class GuiUpdater {
 
         future = Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
             try {
-                for (MainGui gui : MainGui.getOpenMenus()) {
+                for (RewardGui gui : RewardGui.getOpenMenus()) {
                     gui.open();
                 }
             } catch (Exception ex) {
@@ -25,6 +25,7 @@ public class GuiUpdater {
     }
 
     public static void stop() {
+        if (future == null) return;
         future.cancel(true);
     }
 }

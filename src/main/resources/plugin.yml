@@ -1,7 +1,7 @@
 name: AxRewards
 version: '${project.version}'
 main: com.artillexstudios.axrewards.AxRewards
-api-version: '1.13'
+api-version: '1.18'
 folia-supported: true
 
 permissions:
@@ -11,8 +11,10 @@ permissions:
     default: op
   axrewards.forceopen:
     default: op
-  axrewards.open:
+  axrewards.open.default:
     default: true
+  axrewards.open.*:
+    default: op
   axrewards.help:
     default: true
 

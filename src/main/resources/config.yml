@@ -1,8 +1,11 @@
+# DOCUMENTATION: https://docs.artillex-studios.com/axrewards.html
+
 prefix: "&#FFEE00&lAxRewards &7» "
 
 database:
-  # h2, sqlite, mysql, postgresql
-  # for single server setups we recommend h2 because it's way faster than sqlite
+  # supported databases:
+  # single server: h2, sqlite
+  # multi server: mysql, postgresql
   type: "h2"
 
   # you only need to touch these when using mysql/postgresql
@@ -25,12 +28,9 @@ database:
 timer-format: 1
 
 # you must define at least 1
-# reloading will add new commands, however a restart is recommended when editing this
 command-aliases:
  - "axrewards"
  - "axreward"
- - "reward"
- - "rewards"
 
 # should be plugin notify you if there is a new update?
 update-notifier:
@@ -40,4 +40,4 @@ update-notifier:
   on-join: true
 
 # do not change this
-version: 3
+version: 4

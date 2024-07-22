@@ -1,10 +1,15 @@
 package com.artillexstudios.axrewards.commands;
 
+import com.artillexstudios.axapi.config.Config;
 import com.artillexstudios.axapi.nms.NMSHandlers;
 import com.artillexstudios.axapi.reflection.FastFieldAccessor;
 import com.artillexstudios.axapi.utils.StringUtils;
 import com.artillexstudios.axrewards.AxRewards;
-import com.artillexstudios.axrewards.guis.impl.MainGui;
+import com.artillexstudios.axrewards.commands.subcommands.ForceOpen;
+import com.artillexstudios.axrewards.commands.subcommands.Open;
+import com.artillexstudios.axrewards.commands.subcommands.Reload;
+import com.artillexstudios.axrewards.commands.subcommands.Reset;
+import com.artillexstudios.axrewards.guis.impl.GuiManager;
 import com.artillexstudios.axrewards.utils.CommandMessages;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -12,9 +17,7 @@ import org.bukkit.Warning;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.PermissionDefault;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import revxrsal.commands.annotation.AutoComplete;
 import revxrsal.commands.annotation.DefaultFor;
 import revxrsal.commands.annotation.Optional;
@@ -26,73 +29,48 @@ import revxrsal.commands.bukkit.exception.InvalidPlayerException;
 import revxrsal.commands.orphan.OrphanCommand;
 import revxrsal.commands.orphan.Orphans;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.artillexstudios.axrewards.AxRewards.CONFIG;
-import static com.artillexstudios.axrewards.AxRewards.GUIS;
 import static com.artillexstudios.axrewards.AxRewards.LANG;
-import static com.artillexstudios.axrewards.AxRewards.MESSAGEUTILS;
 
 public class Commands implements OrphanCommand {
 
-    @DefaultFor({"~", "~ open"})
-    @CommandPermission(value = "axrewards.open", defaultAccess = PermissionDefault.TRUE)
-    public void open(@NotNull Player sender) {
-        AxRewards.getThreadedQueue().submit(() -> new MainGui(sender).open());
-    }
-
-    @Subcommand("help")
-    @CommandPermission(value = "axrewards.help", defaultAccess = PermissionDefault.TRUE)
+    @DefaultFor({"~", "~ help"})
+    @CommandPermission("axrewards.help")
     public void help(@NotNull CommandSender sender) {
         for (String m : LANG.getStringList("help")) {
             sender.sendMessage(StringUtils.formatToString(m));
         }
     }
 
+    @Subcommand("open")
+    @AutoComplete("@menus")
+    public void open(@NotNull Player sender, @Optional String menu) {
+        Open.INSTANCE.execute(sender, menu);
+    }
+
     @Subcommand("reload")
     @CommandPermission("axrewards.reload")
     public void reload(@NotNull CommandSender sender) {
-        Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFEE00[AxRewards] &#FFEEAAReloading configuration..."));
-        if (!CONFIG.reload()) {
-            MESSAGEUTILS.sendFormatted(sender, "reload.failed", Map.of("%file%", "config.yml"));
-            return;
-        }
-        Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFEE00╠ &#FFEEAAReloaded &fconfig.yml&#FFEEAA!"));
-
-        if (!LANG.reload()) {
-            MESSAGEUTILS.sendFormatted(sender, "reload.failed", Map.of("%file%", "lang.yml"));
-            return;
-        }
-        Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFEE00╠ &#FFEEAAReloaded &flang.yml&#FFEEAA!"));
-
-        if (!GUIS.reload()) {
-            MESSAGEUTILS.sendFormatted(sender, "reload.failed", Map.of("%file%", "guis.yml"));
-            return;
-        }
-        Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFEE00╠ &#FFEEAAReloaded &fguis.yml&#FFEEAA!"));
-
-        Commands.registerCommand();
-
-        Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFEE00╚ &#FFEEAASuccessful reload!"));
-        MESSAGEUTILS.sendLang(sender, "reload.success");
+        Reload.INSTANCE.execute(sender);
     }
 
     @Subcommand("reset")
     @CommandPermission("axrewards.reset")
-    @AutoComplete("* @rewards")
-    public void reset(@NotNull CommandSender sender, @NotNull OfflinePlayer player, @Optional @Nullable String name) {
-        final Map<String, String> replacements = Map.of("%name%", name == null ? "---" : name, "%player%", player.getName() == null ? "---" : player.getName());
-        if (name == null) MESSAGEUTILS.sendLang(sender, "reset.all", replacements);
-        else MESSAGEUTILS.sendLang(sender, "reset.single", replacements);
-        AxRewards.getThreadedQueue().submit(() -> AxRewards.getDatabase().resetReward(player.getUniqueId(), name));
+    @AutoComplete("* @menus @rewards")
+    public void reset(@NotNull CommandSender sender, @NotNull OfflinePlayer player, @Optional String menu, @Optional String reward) {
+        Reset.INSTANCE.execute(sender, player, menu, reward);
     }
 
     @Subcommand("forceopen")
     @CommandPermission("axrewards.forceopen")
-    public void forceopen(@NotNull CommandSender sender, Player player) {
-        new MainGui(player).open();
+    @AutoComplete("* @menus *")
+    public void forceopen(@NotNull CommandSender sender, Player player, @Optional String menu, @Optional Boolean bypass) {
+        ForceOpen.INSTANCE.execute(sender, player, menu, bypass);
     }
 
     private static BukkitCommandHandler handler = null;
@@ -104,7 +82,14 @@ public class Commands implements OrphanCommand {
             accessor.set(Bukkit.getServer(), Warning.WarningState.OFF);
             handler = BukkitCommandHandler.create(AxRewards.getInstance());
             accessor.set(Bukkit.getServer(), prevState);
-            handler.getAutoCompleter().registerSuggestion("rewards", (args, sender, command) -> GUIS.getBackingDocument().getRoutesAsStrings(false).stream().filter(string -> GUIS.getSection(string) != null).toList());
+
+            handler.getAutoCompleter().registerSuggestion("rewards", (args, sender, command) -> {
+                String menu = args.get(args.size() - 2);
+                Config cfg;
+                if ((cfg = GuiManager.getMenus().get(menu)) == null) return List.of();
+                return cfg.getBackingDocument().getRoutesAsStrings(false).stream().filter(string -> cfg.getSection(string) != null).toList();
+            });
+            handler.getAutoCompleter().registerSuggestion("menus", (args, sender, command) -> GuiManager.getMenus().keySet());
 
             handler.registerValueResolver(0, OfflinePlayer.class, context -> {
                 String value = context.pop();
@@ -123,6 +108,13 @@ public class Commands implements OrphanCommand {
         }
 
         handler.unregisterAllCommands();
+        for (Map.Entry<String, Config> entry : GuiManager.getMenus().entrySet()) {
+            try {
+                handler.register(Orphans.path(entry.getValue().getStringList("open-commands").toArray(String[]::new)).handler(new OpenCommand(entry.getKey())));
+            } catch (Exception ex) {
+                Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FF0000[AxRewards] Failed to register the command of menu " + entry.getKey() + ", one of the open-commands is already used by another menu/plugin!"));
+            }
+        }
         handler.register(Orphans.path(CONFIG.getStringList("command-aliases").toArray(String[]::new)).handler(new Commands()));
         handler.registerBrigadier();
     }

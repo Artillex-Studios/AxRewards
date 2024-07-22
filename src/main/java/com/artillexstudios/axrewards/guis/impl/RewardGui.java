@@ -1,5 +1,6 @@
 package com.artillexstudios.axrewards.guis.impl;
 
+import com.artillexstudios.axapi.config.Config;
 import com.artillexstudios.axapi.libs.boostedyaml.boostedyaml.block.implementation.Section;
 import com.artillexstudios.axapi.nms.NMSHandlers;
 import com.artillexstudios.axapi.scheduler.Scheduler;
@@ -22,28 +23,32 @@ import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
-import static com.artillexstudios.axrewards.AxRewards.GUIS;
 import static com.artillexstudios.axrewards.AxRewards.LANG;
 import static com.artillexstudios.axrewards.AxRewards.MESSAGEUTILS;
 
-public class MainGui extends GuiFrame {
-    private static final Set<MainGui> openMenus = Collections.newSetFromMap(new WeakHashMap<>());
-    private final BaseGui gui = Gui
-            .gui(GuiType.valueOf(GUIS.getString("type", "CHEST")))
-            .disableAllInteractions()
-            .title(Component.empty())
-            .rows(GUIS.getInt("rows", 6))
-            .create();
+public class RewardGui extends GuiFrame {
+    private static final Set<RewardGui> openMenus = Collections.newSetFromMap(new WeakHashMap<>());
+    private final BaseGui gui;
+    private final Player player;
+    private final String menu;
 
-    public MainGui(Player player) {
-        super(GUIS, player);
-        gui.updateTitle(StringUtils.formatToString(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") == null ? GUIS.getString("title") : PlaceholderAPI.setPlaceholders(player, GUIS.getString("title"))));
+    public RewardGui(Player player, Config settings, String menu) {
+        super(settings, player);
+        this.player = player;
+        this.menu = menu;
+        this.gui = Gui
+                .gui(GuiType.valueOf(file.getString("type", "CHEST")))
+                .disableAllInteractions()
+                .title(Component.empty())
+                .rows(file.getInt("rows", 6))
+                .create();
+        gui.updateTitle(StringUtils.formatToString(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") == null ? file.getString("title") : PlaceholderAPI.setPlaceholders(player, file.getString("title"))));
         setGui(gui);
     }
 
     public void open() {
-        for (String str : GUIS.getBackingDocument().getRoutesAsStrings(false)) {
-            final Section section = GUIS.getSection(str);
+        for (String str : file.getBackingDocument().getRoutesAsStrings(false)) {
+            final Section section = file.getSection(str);
             if (section == null) continue;
 
             final String permission = section.getString("permission", null);
@@ -56,13 +61,17 @@ public class MainGui extends GuiFrame {
                 continue;
             }
 
-            final long lastClaim = AxRewards.getDatabase().getLastClaimed(player.getUniqueId(), str);
+            final long lastClaim = AxRewards.getDatabase().getLastClaimed(player.getUniqueId(), menu, str);
             final long claimCooldown = section.getLong("cooldown") * 1_000L;
-            if (lastClaim > System.currentTimeMillis() - claimCooldown) {
-                final Map<String, String> replacements = Map.of("%time%", TimeUtils.fancyTime(lastClaim - System.currentTimeMillis() + claimCooldown));
+            if ((lastClaim != 0 && section.getLong("cooldown") == -1) || (lastClaim > System.currentTimeMillis() - claimCooldown)) {
+                long time = lastClaim - System.currentTimeMillis() + claimCooldown;
+                final Map<String, String> replacements = Map.of("%time%", TimeUtils.fancyTime(time));
                 super.createItem(str + ".unclaimable", str, event -> {
                     SoundUtils.playSound(player, LANG.getSection("on-cooldown"));
-                    MESSAGEUTILS.sendLang(player, "on-cooldown.message", replacements);
+                    if (time < 0)
+                        MESSAGEUTILS.sendLang(player, "on-cooldown.one-time", replacements);
+                    else
+                        MESSAGEUTILS.sendLang(player, "on-cooldown.message", replacements);
                 }, replacements);
                 continue;
             }
@@ -70,7 +79,7 @@ public class MainGui extends GuiFrame {
             super.createItem(str + ".claimable", str, event -> {
                 SoundUtils.playSound(player, LANG.getSection("claimed"));
                 MESSAGEUTILS.sendLang(player, "claimed.message");
-                AxRewards.getDatabase().claimReward(player.getUniqueId(), str);
+                AxRewards.getDatabase().claimReward(player.getUniqueId(), menu, str);
 
                 Scheduler.get().run(scheduledTask -> {
                     for (String command : section.getStringList("claim-commands")) {
@@ -81,7 +90,7 @@ public class MainGui extends GuiFrame {
             });
         }
 
-        if (GUIS.getSection("close") != null) {
+        if (file.getSection("close") != null) {
             super.createItem("close", "close", event -> {
                 Scheduler.get().runAt(player.getLocation(), scheduledTask -> {
                     player.closeInventory();
@@ -96,7 +105,7 @@ public class MainGui extends GuiFrame {
         }
         openMenus.add(this);
 
-        final MainGui mainGui = this;
+        final RewardGui mainGui = this;
         gui.setCloseGuiAction(inventoryCloseEvent -> openMenus.remove(mainGui));
 
         Scheduler.get().run(scheduledTask -> gui.open(player));
@@ -104,7 +113,7 @@ public class MainGui extends GuiFrame {
 
     public void updateTitle() {
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") == null) return;
-        Component title = StringUtils.format(PlaceholderAPI.setPlaceholders(player, GUIS.getString("title")));
+        Component title = StringUtils.format(PlaceholderAPI.setPlaceholders(player, file.getString("title")));
 
         final Inventory topInv = player.getPlayer().getOpenInventory().getTopInventory();
         if (topInv.equals(gui.getInventory())) {
@@ -112,7 +121,15 @@ public class MainGui extends GuiFrame {
         }
     }
 
-    public static Set<MainGui> getOpenMenus() {
+    public BaseGui getGui() {
+        return gui;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public static Set<RewardGui> getOpenMenus() {
         return openMenus;
     }
 }
