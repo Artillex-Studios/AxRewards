@@ -2,7 +2,6 @@ package com.artillexstudios.axrewards.commands;
 
 import com.artillexstudios.axapi.config.Config;
 import com.artillexstudios.axapi.nms.NMSHandlers;
-import com.artillexstudios.axapi.reflection.FastFieldAccessor;
 import com.artillexstudios.axapi.utils.StringUtils;
 import com.artillexstudios.axrewards.AxRewards;
 import com.artillexstudios.axrewards.commands.subcommands.ForceOpen;
@@ -13,7 +12,6 @@ import com.artillexstudios.axrewards.guis.impl.GuiManager;
 import com.artillexstudios.axrewards.utils.CommandMessages;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.Warning;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -77,11 +75,7 @@ public class Commands implements OrphanCommand {
 
     public static void registerCommand() {
         if (handler == null) {
-            Warning.WarningState prevState = Bukkit.getWarningState();
-            FastFieldAccessor accessor = FastFieldAccessor.forClassField(Bukkit.getServer().getClass().getPackage().getName() + ".CraftServer", "warningState");
-            accessor.set(Bukkit.getServer(), Warning.WarningState.OFF);
             handler = BukkitCommandHandler.create(AxRewards.getInstance());
-            accessor.set(Bukkit.getServer(), prevState);
 
             handler.getAutoCompleter().registerSuggestion("rewards", (args, sender, command) -> {
                 String menu = args.get(args.size() - 2);
