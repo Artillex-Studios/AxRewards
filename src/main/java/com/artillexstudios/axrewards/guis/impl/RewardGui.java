@@ -83,7 +83,12 @@ public class RewardGui extends GuiFrame {
 
                 Scheduler.get().run(scheduledTask -> {
                     for (String command : section.getStringList("claim-commands")) {
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", player.getName()));
+                        // Keeping in the legacy %player% replacement allowing for previous configs to continue to work.
+                        command = command.replace("%player%", player.getName());
+                        Bukkit.dispatchCommand(
+                                Bukkit.getConsoleSender(),
+                                PlaceholderAPI.setPlaceholders(player, command)
+                        );
                     }
                 });
                 open();
