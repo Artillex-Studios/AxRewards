@@ -3,17 +3,17 @@ package com.artillexstudios.axrewards.guis;
 import com.artillexstudios.axrewards.guis.impl.RewardGui;
 
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class GuiUpdater {
-
-    private static ScheduledFuture<?> future = null;
+    private static ScheduledExecutorService service = null;
 
     public static void start() {
-        if (future != null) future.cancel(true);
+        if (service != null) service.shutdown();
 
-        future = Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
+        service = Executors.newSingleThreadScheduledExecutor();
+        service.scheduleAtFixedRate(() -> {
             try {
                 for (RewardGui gui : RewardGui.getOpenMenus()) {
                     gui.open();
@@ -25,7 +25,7 @@ public class GuiUpdater {
     }
 
     public static void stop() {
-        if (future == null) return;
-        future.cancel(true);
+        if (service == null) return;
+        service.shutdown();
     }
 }

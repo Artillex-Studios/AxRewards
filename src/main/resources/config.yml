@@ -32,6 +32,10 @@ command-aliases:
  - "axrewards"
  - "axreward"
 
+# if enabled, this will update the placeholders in the gui titles
+# this is disabled by default, as this can cause the gui to be quite glitchy at times
+update-gui-title: false
+
 # should be plugin notify you if there is a new update?
 update-notifier:
   # if enabled, it will display the message in the console
@@ -40,4 +44,4 @@ update-notifier:
   on-join: true
 
 # do not change this
-version: 4
+version: 5

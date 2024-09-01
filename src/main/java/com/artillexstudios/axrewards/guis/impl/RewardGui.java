@@ -3,6 +3,7 @@ package com.artillexstudios.axrewards.guis.impl;
 import com.artillexstudios.axapi.config.Config;
 import com.artillexstudios.axapi.libs.boostedyaml.boostedyaml.block.implementation.Section;
 import com.artillexstudios.axapi.nms.NMSHandlers;
+import com.artillexstudios.axapi.reflection.ClassUtils;
 import com.artillexstudios.axapi.scheduler.Scheduler;
 import com.artillexstudios.axapi.utils.StringUtils;
 import com.artillexstudios.axrewards.AxRewards;
@@ -23,11 +24,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
+import static com.artillexstudios.axrewards.AxRewards.CONFIG;
 import static com.artillexstudios.axrewards.AxRewards.LANG;
 import static com.artillexstudios.axrewards.AxRewards.MESSAGEUTILS;
 
 public class RewardGui extends GuiFrame {
-    private static final Set<RewardGui> openMenus = Collections.newSetFromMap(new WeakHashMap<>());
+    private static final Set<RewardGui> openMenus = Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
     private final BaseGui gui;
     private final Player player;
     private final String menu;
@@ -87,7 +89,7 @@ public class RewardGui extends GuiFrame {
                         command = command.replace("%player%", player.getName());
                         Bukkit.dispatchCommand(
                                 Bukkit.getConsoleSender(),
-                                PlaceholderAPI.setPlaceholders(player, command)
+                                ClassUtils.INSTANCE.classExists("me.clip.placeholderapi.PlaceholderAPI") ? PlaceholderAPI.setPlaceholders(player, command) : command
                         );
                     }
                 });
@@ -108,17 +110,20 @@ public class RewardGui extends GuiFrame {
             updateTitle();
             return;
         }
-        openMenus.add(this);
 
         final RewardGui mainGui = this;
-        gui.setCloseGuiAction(inventoryCloseEvent -> openMenus.remove(mainGui));
+        gui.setCloseGuiAction(e -> openMenus.remove(mainGui));
 
-        Scheduler.get().run(scheduledTask -> gui.open(player));
+        Scheduler.get().run(t -> {
+            gui.open(player);
+            openMenus.add(this);
+        });
     }
 
     public void updateTitle() {
+        if (!CONFIG.getBoolean("update-gui-title", false)) return;
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") == null) return;
-        Component title = StringUtils.format(PlaceholderAPI.setPlaceholders(player, file.getString("title")));
+        final Component title = StringUtils.format(PlaceholderAPI.setPlaceholders(player, file.getString("title")));
 
         final Inventory topInv = player.getPlayer().getOpenInventory().getTopInventory();
         if (topInv.equals(gui.getInventory())) {
