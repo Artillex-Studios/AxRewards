@@ -75,10 +75,9 @@ public class CommandManager {
         handler.getAutoCompleter().registerParameterSuggestions(Menu.class, (args, sender, command) -> {
             return MenuManager.getMenus().keySet();
         });
-//
+
         handler.getAutoCompleter().registerParameterSuggestions(Reward.class, (args, sender, command) -> {
             String last = args.get(args.size() - 2);
-            System.out.println(args);
             Menu menu = MenuManager.getMenus().get(last);
             if (menu == null) return List.of();
             return menu.rewards().stream().map(reward -> menu.name() + "-" + reward.name()).toList();
