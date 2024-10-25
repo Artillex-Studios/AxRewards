@@ -1,9 +1,8 @@
 package com.artillexstudios.axrewards.database;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.UUID;
+import com.artillexstudios.axrewards.guis.data.Menu;
+import com.artillexstudios.axrewards.guis.data.Reward;
+import org.bukkit.OfflinePlayer;
 
 public interface Database {
 
@@ -11,11 +10,23 @@ public interface Database {
 
     void setup();
 
-    void claimReward(@NotNull UUID uuid, String menu, String reward);
+    void reload();
 
-    void resetReward(@NotNull UUID uuid, @Nullable String menu, @Nullable String reward);
+    int getPlayerId(OfflinePlayer player);
 
-    long getLastClaimed(@NotNull UUID uuid, String menu, String reward);
+    int getMenuId(Menu menu);
+
+    int getRewardId(Reward reward);
+
+    long getLastClaim(OfflinePlayer player, Reward reward);
+
+    void claimReward(OfflinePlayer player, Reward reward);
+
+    void resetReward(OfflinePlayer player, Reward reward);
+
+    void resetReward(OfflinePlayer player, Menu menu);
+
+    void resetReward(OfflinePlayer player);
 
     void disable();
 }

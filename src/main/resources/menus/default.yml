@@ -28,8 +28,13 @@ example:
   # in seconds
   # you can set it to -1 for it to never automatically refresh
   cooldown: 86400
+  # you can create as many item/command rewards as you would like!
+  # these will be run/given when a player claims this reward
   claim-commands:
-    - "give %player% iron_ingot 1"
+    - "say %player% has claimed their daily reward!"
+  claim-items:
+    - material: IRON_INGOT
+      amount: 1
   claimable:
     material: "CHEST_MINECART"
     name: "&#FFEE00&lᴇxᴀᴍᴘʟᴇ ʀᴇᴡᴀʀᴅ"
@@ -55,7 +60,10 @@ permission-example:
   # you can set the permission to any value, it does not have to start with axrewards
   permission: "axrewards.permissionreward"
   claim-commands:
-    - "give %player% diamond 1"
+    - "say %player% has claimed their premium daily reward!"
+  claim-items:
+    - material: DIAMOND
+      amount: 1
   claimable:
     material: "CHEST_MINECART"
     name: "&#FFEE00&lᴇxᴀᴍᴘʟᴇ ᴘᴇʀᴍɪssɪᴏɴ ʀᴇᴡᴀʀᴅ"

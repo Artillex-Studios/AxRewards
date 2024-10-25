@@ -1,9 +1,10 @@
 package com.artillexstudios.axrewards.commands.subcommands;
 
 import com.artillexstudios.axapi.utils.StringUtils;
-import com.artillexstudios.axrewards.commands.Commands;
+import com.artillexstudios.axrewards.AxRewards;
+import com.artillexstudios.axrewards.commands.CommandManager;
 import com.artillexstudios.axrewards.guis.GuiUpdater;
-import com.artillexstudios.axrewards.guis.impl.GuiManager;
+import com.artillexstudios.axrewards.guis.data.MenuManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
@@ -30,11 +31,12 @@ public enum Reload {
         }
         Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFEE00╠ &#FFEEAAReloaded &flang.yml&#FFEEAA!"));
 
-        GuiManager.reload();
+        MenuManager.reload();
         Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFEE00╠ &#FFEEAAReloaded &fmenus&#FFEEAA!"));
 
-        Commands.registerCommand();
+        CommandManager.reload();
         GuiUpdater.start();
+        AxRewards.getDatabase().reload();
 
         Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFEE00╚ &#FFEEAASuccessful reload!"));
         MESSAGEUTILS.sendLang(sender, "reload.success");

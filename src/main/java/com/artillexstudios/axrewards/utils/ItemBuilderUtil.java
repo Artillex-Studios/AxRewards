@@ -1,8 +1,8 @@
 package com.artillexstudios.axrewards.utils;
 
 import com.artillexstudios.axapi.libs.boostedyaml.boostedyaml.block.implementation.Section;
-import com.artillexstudios.axapi.reflection.ClassUtils;
 import com.artillexstudios.axapi.utils.ItemBuilder;
+import com.artillexstudios.axrewards.AxRewards;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Contract;
@@ -23,16 +23,12 @@ public class ItemBuilderUtil {
         final ItemBuilder builder = new ItemBuilder(section);
 
         section.getOptionalString("name").ifPresent((name) -> {
-            if (ClassUtils.INSTANCE.classExists("me.clip.placeholderapi.PlaceholderAPI")) {
-                name = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, name);
-            }
+            name = AxRewards.getPlaceholderParser().setPlaceholders(player, name);
             builder.setName(name, replacements);
         });
 
         section.getOptionalStringList("lore").ifPresent((lore) -> {
-            if (ClassUtils.INSTANCE.classExists("me.clip.placeholderapi.PlaceholderAPI")) {
-                lore = me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, lore);
-            }
+            lore = AxRewards.getPlaceholderParser().setPlaceholders(player, lore);
             builder.setLore(lore, replacements);
         });
 

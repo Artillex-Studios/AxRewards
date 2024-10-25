@@ -8,8 +8,8 @@ import static com.artillexstudios.axrewards.AxRewards.CONFIG;
 import static com.artillexstudios.axrewards.AxRewards.LANG;
 
 public class TimeUtils {
-    public static @NotNull String fancyTime(long time) {
 
+    public static @NotNull String fancyTime(long time) {
         if (time < 0) return "---";
 
         final Duration remainingTime = Duration.ofMillis(time);

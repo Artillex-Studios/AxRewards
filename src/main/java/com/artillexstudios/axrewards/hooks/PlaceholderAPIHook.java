@@ -1,6 +1,7 @@
 package com.artillexstudios.axrewards.hooks;
 
-import com.artillexstudios.axrewards.guis.impl.GuiManager;
+import com.artillexstudios.axrewards.guis.data.Menu;
+import com.artillexstudios.axrewards.guis.data.MenuManager;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -41,14 +42,18 @@ public class PlaceholderAPIHook extends PlaceholderExpansion {
 
         if (args.length == 1 && args[0].equalsIgnoreCase("collectable")) {
             int am = 0;
-            for (String s : GuiManager.getMenus().keySet()) {
-                am += GuiManager.getClaimable(player, s);
+            for (String s : MenuManager.getMenus().keySet()) {
+                Menu menu = MenuManager.getMenus().get(s);
+                if (menu == null) continue;
+                am += MenuManager.getClaimable(player, menu);
             }
             return "" + am;
         }
 
         if (args.length == 2 && args[0].equalsIgnoreCase("collectable")) {
-            return "" + GuiManager.getClaimable(player, args[1]);
+            Menu menu = MenuManager.getMenus().get(args[1]);
+            if (menu == null) return "Menu not found";
+            return "" + MenuManager.getClaimable(player, menu);
         }
 
         return null;

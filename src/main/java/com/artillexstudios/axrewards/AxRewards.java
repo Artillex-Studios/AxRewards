@@ -12,15 +12,17 @@ import com.artillexstudios.axapi.libs.libby.BukkitLibraryManager;
 import com.artillexstudios.axapi.utils.FeatureFlags;
 import com.artillexstudios.axapi.utils.MessageUtils;
 import com.artillexstudios.axapi.utils.StringUtils;
-import com.artillexstudios.axrewards.commands.Commands;
+import com.artillexstudios.axrewards.commands.CommandManager;
 import com.artillexstudios.axrewards.database.Database;
 import com.artillexstudios.axrewards.database.impl.H2;
 import com.artillexstudios.axrewards.database.impl.MySQL;
 import com.artillexstudios.axrewards.database.impl.PostgreSQL;
 import com.artillexstudios.axrewards.database.impl.SQLite;
 import com.artillexstudios.axrewards.guis.GuiUpdater;
-import com.artillexstudios.axrewards.guis.impl.GuiManager;
+import com.artillexstudios.axrewards.guis.data.MenuManager;
 import com.artillexstudios.axrewards.hooks.PlaceholderAPIHook;
+import com.artillexstudios.axrewards.hooks.PlaceholderAPIParser;
+import com.artillexstudios.axrewards.hooks.Placeholders;
 import com.artillexstudios.axrewards.libraries.Libraries;
 import com.artillexstudios.axrewards.utils.FileUtils;
 import com.artillexstudios.axrewards.utils.UpdateNotifier;
@@ -38,6 +40,7 @@ public final class AxRewards extends AxPlugin {
     private static ThreadedQueue<Runnable> threadedQueue;
     private static Database database;
     public static BukkitAudiences BUKKITAUDIENCES;
+    private static Placeholders placeholderParser;
 
     public static ThreadedQueue<Runnable> getThreadedQueue() {
         return threadedQueue;
@@ -49,6 +52,10 @@ public final class AxRewards extends AxPlugin {
 
     public static AxPlugin getInstance() {
         return instance;
+    }
+
+    public static Placeholders getPlaceholderParser() {
+        return placeholderParser;
     }
 
     public void load() {
@@ -64,7 +71,7 @@ public final class AxRewards extends AxPlugin {
     }
 
     public void enable() {
-        instance = this;
+        instance = this; // todo: proper placeholderapi integration
 
         int pluginId = 21023;
         new Metrics(this, pluginId);
@@ -80,12 +87,12 @@ public final class AxRewards extends AxPlugin {
 
         if (FileUtils.PLUGIN_DIRECTORY.resolve("menus/").toFile().mkdirs()) {
             if (new File(getDataFolder(), "guis.yml").exists())
-                new ConverterV2();
+                new Converter2();
             else
                 FileUtils.copyFromResource("menus");
         }
 
-        GuiManager.reload();
+        MenuManager.reload();
 
         switch (CONFIG.getString("database.type").toLowerCase()) {
             case "sqlite" -> database = new SQLite();
@@ -98,12 +105,15 @@ public final class AxRewards extends AxPlugin {
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             new PlaceholderAPIHook().register();
+            placeholderParser = new PlaceholderAPIParser();
             Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFEE00[AxRewards] Hooked into PlaceholderAPI!"));
+        } else {
+            placeholderParser = new Placeholders() {};
         }
 
         GuiUpdater.start();
 
-        Commands.registerCommand();
+        CommandManager.load();
 
         Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFEE00[AxRewards] Loaded plugin! Using &f" + database.getType() + " &#FFEE00database to store data!"));
 

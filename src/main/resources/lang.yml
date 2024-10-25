@@ -26,7 +26,7 @@ on-cooldown:
   sound: "block.anvil.land"
 
 claimed:
-  message: "&#00FF00You can successfully claimed the reward!"
+  message: "&#00FF00You have successfully claimed the reward!"
   sound: "entity.player.levelup"
 
 reset:

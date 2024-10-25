@@ -8,9 +8,9 @@ import java.util.List;
 import static com.artillexstudios.axrewards.AxRewards.CONFIG;
 import static com.artillexstudios.axrewards.AxRewards.LANG;
 
-public class ConverterV2 {
+public class Converter2 {
 
-    public ConverterV2() {
+    public Converter2() {
         final List<String> aliases = CONFIG.getStringList("command-aliases");
         aliases.remove("reward");
         aliases.remove("rewards");
