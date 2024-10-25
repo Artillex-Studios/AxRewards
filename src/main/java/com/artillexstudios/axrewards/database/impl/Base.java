@@ -105,12 +105,13 @@ public abstract class Base implements Database {
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) return rs.getLong(1);
+                return 0;
             }
 
         } catch (Exception ex) {
             ex.printStackTrace();
+            return System.currentTimeMillis();
         }
-        return 0;
     }
 
     @Override

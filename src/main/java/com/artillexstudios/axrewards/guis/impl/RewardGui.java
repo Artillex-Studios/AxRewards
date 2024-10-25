@@ -63,8 +63,9 @@ public class RewardGui extends GuiFrame {
                 continue;
             }
 
-            final long lastClaim = AxRewards.getDatabase().getLastClaimed(player.getUniqueId(), menu, str);
-            final long claimCooldown = section.getLong("cooldown") * 1_000L;
+            long lastClaim = AxRewards.getDatabase().getLastClaimed(player.getUniqueId(), menu, str);
+            long claimCooldown = section.getLong("cooldown") * 1_000L;
+
             if ((lastClaim != 0 && section.getLong("cooldown") == -1) || (lastClaim > System.currentTimeMillis() - claimCooldown)) {
                 long time = lastClaim - System.currentTimeMillis() + claimCooldown;
                 final Map<String, String> replacements = Map.of("%time%", TimeUtils.fancyTime(time));
@@ -79,13 +80,24 @@ public class RewardGui extends GuiFrame {
             }
 
             super.createItem(str + ".claimable", str, event -> {
+                long lastClaim2 = AxRewards.getDatabase().getLastClaimed(player.getUniqueId(), menu, str);
+                if ((lastClaim2 != 0 && section.getLong("cooldown") == -1) || (lastClaim2 > System.currentTimeMillis() - claimCooldown)) {
+                    long time = lastClaim2 - System.currentTimeMillis() + claimCooldown;
+                    SoundUtils.playSound(player, LANG.getSection("on-cooldown"));
+                    final Map<String, String> replacements = Map.of("%time%", TimeUtils.fancyTime(time));
+                    if (time < 0)
+                        MESSAGEUTILS.sendLang(player, "on-cooldown.one-time", replacements);
+                    else
+                        MESSAGEUTILS.sendLang(player, "on-cooldown.message", replacements);
+                    return;
+                }
+
                 SoundUtils.playSound(player, LANG.getSection("claimed"));
                 MESSAGEUTILS.sendLang(player, "claimed.message");
                 AxRewards.getDatabase().claimReward(player.getUniqueId(), menu, str);
 
                 Scheduler.get().run(scheduledTask -> {
                     for (String command : section.getStringList("claim-commands")) {
-                        // Keeping in the legacy %player% replacement allowing for previous configs to continue to work.
                         command = command.replace("%player%", player.getName());
                         Bukkit.dispatchCommand(
                                 Bukkit.getConsoleSender(),

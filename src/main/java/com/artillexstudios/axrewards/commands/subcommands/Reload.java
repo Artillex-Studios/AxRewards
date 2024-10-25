@@ -19,13 +19,13 @@ public enum Reload {
     public void execute(CommandSender sender) {
         Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFEE00[AxRewards] &#FFEEAAReloading configuration..."));
         if (!CONFIG.reload()) {
-            MESSAGEUTILS.sendFormatted(sender, "reload.failed", Map.of("%file%", "config.yml"));
+            MESSAGEUTILS.sendLang(sender, "reload.failed", Map.of("%file%", "config.yml"));
             return;
         }
         Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFEE00╠ &#FFEEAAReloaded &fconfig.yml&#FFEEAA!"));
 
         if (!LANG.reload()) {
-            MESSAGEUTILS.sendFormatted(sender, "reload.failed", Map.of("%file%", "lang.yml"));
+            MESSAGEUTILS.sendLang(sender, "reload.failed", Map.of("%file%", "lang.yml"));
             return;
         }
         Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFEE00╠ &#FFEEAAReloaded &flang.yml&#FFEEAA!"));
