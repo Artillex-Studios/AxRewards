@@ -29,7 +29,7 @@ public abstract class Base implements Database {
             CREATE TABLE IF NOT EXISTS axrewards_players (
                 id INT NOT NULL AUTO_INCREMENT,
                 uuid VARCHAR(36) NOT NULL,
-                name VARCHAR(128) NOT NULL,
+                name VARCHAR(128),
                 PRIMARY KEY (id), UNIQUE (uuid)
             );
     """;

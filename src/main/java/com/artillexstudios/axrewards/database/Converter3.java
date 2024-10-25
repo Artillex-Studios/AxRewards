@@ -17,7 +17,7 @@ import java.util.UUID;
 public class Converter3 {
 
     public Converter3(Base base) {
-        Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFFF00[AxRewards] Migrating database... Don't stop the server while it's running!"));
+        Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFEE00[AxRewards] Migrating database... Don't stop the server while it's running!"));
         int success = 0;
 
         try (Connection conn = base.getConnection()) {
@@ -40,13 +40,13 @@ public class Converter3 {
                     rewardName = menuStr[0];
                 }
                 if (menu == null) {
-                    Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFFF00[AxRewards] Can't find menu " + rewardStr + "!"));
+                    Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFEE00[AxRewards] Can't find menu " + rewardStr + "!"));
                     continue;
                 }
 
                 Optional<Reward> optReward = menu.rewards().stream().filter(rw -> rw.name().equals(rewardName)).findAny();
                 if (optReward.isEmpty()) {
-                    Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFFF00[AxRewards] Can't find reward " + rewardName + " in menu " + menu.name() + "!"));
+                    Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFEE00[AxRewards] Can't find reward " + rewardName + " in menu " + menu.name() + "!"));
                     continue;
                 }
                 reward = optReward.get();
@@ -63,6 +63,6 @@ public class Converter3 {
             ex.printStackTrace();
         }
 
-        Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFFF00[AxRewards] Migration finished! Converted " + success + " cooldowns!"));
+        Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFEE00[AxRewards] Migration finished! Converted " + success + " cooldowns!"));
     }
 }

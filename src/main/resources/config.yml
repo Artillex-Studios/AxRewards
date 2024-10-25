@@ -4,7 +4,7 @@ prefix: "&#FFEE00&lAxRewards &7» "
 
 database:
   # supported databases:
-  # single server: h2, sqlite
+  # single server: h2
   # multi server: mysql, postgresql
   type: "h2"
 

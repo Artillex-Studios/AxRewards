@@ -17,7 +17,6 @@ import com.artillexstudios.axrewards.database.Database;
 import com.artillexstudios.axrewards.database.impl.H2;
 import com.artillexstudios.axrewards.database.impl.MySQL;
 import com.artillexstudios.axrewards.database.impl.PostgreSQL;
-import com.artillexstudios.axrewards.database.impl.SQLite;
 import com.artillexstudios.axrewards.guis.GuiUpdater;
 import com.artillexstudios.axrewards.guis.data.MenuManager;
 import com.artillexstudios.axrewards.hooks.PlaceholderAPIHook;
@@ -95,7 +94,7 @@ public final class AxRewards extends AxPlugin {
         MenuManager.reload();
 
         switch (CONFIG.getString("database.type").toLowerCase()) {
-            case "sqlite" -> database = new SQLite();
+//            case "sqlite" -> database = new SQLite();
             case "mysql" -> database = new MySQL();
             case "postgresql" -> database = new PostgreSQL();
             default -> database = new H2();
