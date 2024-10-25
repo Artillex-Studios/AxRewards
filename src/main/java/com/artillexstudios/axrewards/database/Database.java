@@ -3,9 +3,12 @@ package com.artillexstudios.axrewards.database;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.sql.Connection;
 import java.util.UUID;
 
 public interface Database {
+
+    Connection getConnection();
 
     String getType();
 
