@@ -131,8 +131,7 @@ public class RewardGui extends GuiFrame {
                 return;
             }
 
-            final RewardGui mainGui = this;
-            gui.setCloseGuiAction(e -> openMenus.remove(mainGui));
+            gui.setCloseGuiAction(e -> openMenus.remove(this));
 
             Scheduler.get().run(t -> {
                 gui.open(player);

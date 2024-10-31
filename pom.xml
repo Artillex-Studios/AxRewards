@@ -6,7 +6,7 @@
 
     <groupId>com.artillexstudios</groupId>
     <artifactId>AxRewards</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
     <packaging>jar</packaging>
 
     <name>AxRewards</name>
@@ -108,7 +108,7 @@
         <dependency>
             <groupId>com.artillexstudios.axapi</groupId>
             <artifactId>axapi</artifactId>
-            <version>1.4.332</version>
+            <version>1.4.396</version>
             <scope>compile</scope>
             <classifier>all</classifier>
         </dependency>
@@ -194,6 +194,7 @@
             <groupId>commons-dbutils</groupId>
             <artifactId>commons-dbutils</artifactId>
             <version>1.8.1</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
