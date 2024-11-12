@@ -10,6 +10,7 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 import org.bukkit.OfflinePlayer;
 
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
@@ -134,9 +135,14 @@ public abstract class Base implements Database {
     public void reload() {
         try (Connection conn = getConnection()) {
             for (Map.Entry<String, Menu> entry : MenuManager.getMenus().entrySet()) {
-                runner.execute(conn, INSERT_MENU, entry.getKey());
+                try {
+                    runner.execute(conn, INSERT_MENU, entry.getKey());
+                } catch (Exception ignored) {}
+
                 for (Reward reward : entry.getValue().rewards()) {
-                    runner.execute(conn, INSERT_REWARD, reward.name(), getMenuId(reward.menu()));
+                    try {
+                        runner.execute(conn, INSERT_REWARD, reward.name(), getMenuId(reward.menu()));
+                    } catch (Exception ignored) {}
                 }
             }
         } catch (SQLException ex) {
@@ -148,8 +154,8 @@ public abstract class Base implements Database {
     public int getPlayerId(OfflinePlayer player) {
         ScalarHandler<Integer> scalarHandler = new ScalarHandler<>();
         try (Connection conn = getConnection()) {
-            Integer id = runner.query(conn, SELECT_PLAYER_BY_UUID, scalarHandler, player.getUniqueId().toString());
-            if (id != null) return id;
+            Number id = runner.query(conn, SELECT_PLAYER_BY_UUID, scalarHandler, player.getUniqueId().toString());
+            if (id != null) return id.intValue();
             return runner.insert(conn, INSERT_PLAYER, scalarHandler, player.getUniqueId().toString(), player.getName());
         } catch (SQLException ex) {
             ex.printStackTrace();
