@@ -9,9 +9,9 @@ import com.artillexstudios.axapi.libs.boostedyaml.boostedyaml.settings.general.G
 import com.artillexstudios.axapi.libs.boostedyaml.boostedyaml.settings.loader.LoaderSettings;
 import com.artillexstudios.axapi.libs.boostedyaml.boostedyaml.settings.updater.UpdaterSettings;
 import com.artillexstudios.axapi.libs.libby.BukkitLibraryManager;
-import com.artillexstudios.axapi.utils.FeatureFlags;
 import com.artillexstudios.axapi.utils.MessageUtils;
 import com.artillexstudios.axapi.utils.StringUtils;
+import com.artillexstudios.axapi.utils.featureflags.FeatureFlags;
 import com.artillexstudios.axrewards.commands.CommandManager;
 import com.artillexstudios.axrewards.database.Database;
 import com.artillexstudios.axrewards.database.impl.H2;
@@ -124,7 +124,7 @@ public final class AxRewards extends AxPlugin {
         database.disable();
     }
 
-    public void updateFlags() {
-        FeatureFlags.USE_LEGACY_HEX_FORMATTER.set(true);
+    public void updateFlags(FeatureFlags flags) {
+        flags.USE_LEGACY_HEX_FORMATTER.set(true);
     }
 }
