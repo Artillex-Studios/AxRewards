@@ -9,6 +9,7 @@ rows: 3
 # valid values: CHEST, WORKBENCH, HOPPER, DISPENSER, BREWING
 type: CHEST
 
+# you need to restart the server after changing this
 open-commands:
   - "reward"
   - "rewards"

@@ -64,7 +64,7 @@ public class MenuManager {
         }
     }
 
-    public static ConcurrentHashMap<String, Menu> getMenus() {
+    public static Map<String, Menu> getMenus() {
         return menus;
     }
 

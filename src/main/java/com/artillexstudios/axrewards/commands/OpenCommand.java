@@ -2,20 +2,24 @@ package com.artillexstudios.axrewards.commands;
 
 import com.artillexstudios.axrewards.commands.subcommands.Open;
 import com.artillexstudios.axrewards.guis.data.Menu;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import revxrsal.commands.annotation.DefaultFor;
-import revxrsal.commands.orphan.OrphanCommand;
+import dev.jorel.commandapi.CommandAPICommand;
 
-public class OpenCommand implements OrphanCommand {
-    private final Menu menu;
+import java.util.ArrayList;
+import java.util.List;
 
-    public OpenCommand(Menu menu) {
-        this.menu = menu;
-    }
+public class OpenCommand extends Command {
 
-    @DefaultFor({"~", "~ open"})
-    public void open(@NotNull Player sender) {
-        Open.INSTANCE.execute(sender, menu);
+    public OpenCommand(List<String> aliases, Menu menu) {
+        this.aliases = new ArrayList<>(aliases);
+        this.command = new CommandAPICommand(aliases.get(0))
+                .withAliases(aliases.subList(1, aliases.size() - 1).toArray(String[]::new))
+                .executesPlayer((sender, args) -> {
+                    Open.INSTANCE.execute(sender, menu);
+                })
+                .withSubcommand(new CommandAPICommand("open")
+                        .executesPlayer((sender, args) -> {
+                            Open.INSTANCE.execute(sender, menu);
+                        })
+                );
     }
 }

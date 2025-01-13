@@ -25,11 +25,14 @@ import com.artillexstudios.axrewards.hooks.Placeholders;
 import com.artillexstudios.axrewards.libraries.Libraries;
 import com.artillexstudios.axrewards.utils.FileUtils;
 import com.artillexstudios.axrewards.utils.UpdateNotifier;
+import dev.jorel.commandapi.CommandAPI;
+import dev.jorel.commandapi.CommandAPIBukkitConfig;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 
 import java.io.File;
+import java.lang.reflect.Method;
 
 public final class AxRewards extends AxPlugin {
     public static Config CONFIG;
@@ -70,7 +73,7 @@ public final class AxRewards extends AxPlugin {
     }
 
     public void enable() {
-        instance = this; // todo: proper placeholderapi integration
+        instance = this;
 
         int pluginId = 21023;
         new Metrics(this, pluginId);
@@ -111,7 +114,6 @@ public final class AxRewards extends AxPlugin {
         }
 
         GuiUpdater.start();
-
         CommandManager.load();
 
         Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFEE00[AxRewards] Loaded plugin! Using &f" + database.getType() + " &#FFEE00database to store data!"));
@@ -120,6 +122,7 @@ public final class AxRewards extends AxPlugin {
     }
 
     public void disable() {
+        CommandManager.disable();
         GuiUpdater.stop();
         database.disable();
     }

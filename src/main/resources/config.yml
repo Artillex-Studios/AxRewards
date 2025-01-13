@@ -28,6 +28,7 @@ database:
 timer-format: 1
 
 # you must define at least 1
+# you need to restart the server after changing this
 command-aliases:
  - "axrewards"
  - "axreward"
