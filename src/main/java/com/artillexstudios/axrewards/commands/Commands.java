@@ -33,7 +33,13 @@ public class Commands implements OrphanCommand {
     @Subcommand("reload")
     @CommandPermission("axrewards.reload")
     public void reload(@NotNull CommandSender sender) {
-        Reload.INSTANCE.execute(sender);
+        Reload.INSTANCE.execute(sender, false);
+    }
+
+    @Subcommand("reload commands")
+    @CommandPermission("axrewards.reload")
+    public void reloadCommands(@NotNull CommandSender sender) {
+        Reload.INSTANCE.execute(sender, true);
     }
 
     @Subcommand("reset")

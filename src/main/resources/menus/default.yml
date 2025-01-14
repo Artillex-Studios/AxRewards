@@ -9,6 +9,8 @@ rows: 3
 # valid values: CHEST, WORKBENCH, HOPPER, DISPENSER, BREWING
 type: CHEST
 
+# this probably won't update when the plugin is reloaded, so try restarting the server
+# you can try to update it manually with '/axrewards reload commands' but it can be unstable
 open-commands:
   - "reward"
   - "rewards"

@@ -17,7 +17,7 @@ import static com.artillexstudios.axrewards.AxRewards.MESSAGEUTILS;
 public enum Reload {
     INSTANCE;
 
-    public void execute(CommandSender sender) {
+    public void execute(CommandSender sender, boolean commands) {
         Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFEE00[AxRewards] &#FFEEAAReloading configuration..."));
         if (!CONFIG.reload()) {
             MESSAGEUTILS.sendLang(sender, "reload.failed", Map.of("%file%", "config.yml"));
@@ -34,7 +34,8 @@ public enum Reload {
         MenuManager.reload();
         Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFEE00╠ &#FFEEAAReloaded &fmenus&#FFEEAA!"));
 
-        CommandManager.reload();
+        if (commands)
+            CommandManager.reload();
         GuiUpdater.start();
         AxRewards.getDatabase().reload();
 

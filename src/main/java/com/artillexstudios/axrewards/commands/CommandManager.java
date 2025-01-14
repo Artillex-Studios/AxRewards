@@ -14,9 +14,12 @@ import org.bukkit.entity.HumanEntity;
 import revxrsal.commands.bukkit.BukkitCommandActor;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
 import revxrsal.commands.bukkit.exception.InvalidPlayerException;
+import revxrsal.commands.core.CommandPath;
 import revxrsal.commands.exception.CommandErrorException;
+import revxrsal.commands.orphan.OrphanRegistry;
 import revxrsal.commands.orphan.Orphans;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -40,9 +43,11 @@ public class CommandManager {
 
         handler.registerValueResolver(0, OfflinePlayer.class, context -> {
             String value = context.pop();
-            if (value.equalsIgnoreCase("self") || value.equalsIgnoreCase("me")) return ((BukkitCommandActor) context.actor()).requirePlayer();
+            if (value.equalsIgnoreCase("self") || value.equalsIgnoreCase("me"))
+                return ((BukkitCommandActor) context.actor()).requirePlayer();
             OfflinePlayer player = NMSHandlers.getNmsHandler().getCachedOfflinePlayer(value);
-            if (player == null && !(player = Bukkit.getOfflinePlayer(value)).hasPlayedBefore()) throw new InvalidPlayerException(context.parameter(), value);
+            if (player == null && !(player = Bukkit.getOfflinePlayer(value)).hasPlayedBefore())
+                throw new InvalidPlayerException(context.parameter(), value);
             return player;
         });
 
@@ -86,21 +91,29 @@ public class CommandManager {
         handler.getTranslator().add(new CommandMessages());
         handler.setLocale(new Locale("en", "US"));
 
+        handler.register(Orphans.path(CONFIG.getStringList("command-aliases").toArray(String[]::new)).handler(new Commands()));
+        handler.registerBrigadier();
+
         reload();
     }
 
+    private static final List<CommandPath> registered = new ArrayList<>();
     public static void reload() {
-        handler.unregisterAllCommands();
+        for (CommandPath path : registered) {
+            handler.unregister(path);
+        }
+
+        registered.clear();
         for (Map.Entry<String, Menu> entry : MenuManager.getMenus().entrySet()) {
             try {
-                handler.register(Orphans.path(
+                OrphanRegistry registry = Orphans.path(
                         entry.getValue().settings().getStringList("open-commands").toArray(String[]::new)
-                ).handler(new OpenCommand(entry.getValue())));
+                ).handler(new OpenCommand(entry.getValue()));
+                registered.addAll(registry.getParentPaths());
+                handler.register(registry);
             } catch (Exception ex) {
                 Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FF0000[AxRewards] Failed to register the command of menu " + entry.getKey() + ", one of the open-commands is already used by another menu/plugin!"));
             }
         }
-        handler.register(Orphans.path(CONFIG.getStringList("command-aliases").toArray(String[]::new)).handler(new Commands()));
-        handler.registerBrigadier();
     }
 }
