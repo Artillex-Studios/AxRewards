@@ -23,7 +23,7 @@ public class Commands extends Command {
     public Commands(List<String> aliases) {
         this.aliases = new ArrayList<>(aliases);
         this.command = new CommandAPICommand(aliases.get(0))
-            .withAliases(aliases.subList(1, aliases.size() - 1).toArray(String[]::new))
+            .withAliases(aliases.subList(1, aliases.size()).toArray(String[]::new))
             .withPermission("axrewards.help")
             .executes((sender, args) -> {
                 Help.INSTANCE.execute(sender);

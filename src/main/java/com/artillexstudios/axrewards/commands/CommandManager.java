@@ -20,6 +20,7 @@ public class CommandManager {
 
     public static void load() {
         CommandAPI.onLoad(new CommandAPIBukkitConfig(AxRewards.getInstance())
+                .usePluginNamespace()
         );
         CommandAPI.onEnable();
         reload();

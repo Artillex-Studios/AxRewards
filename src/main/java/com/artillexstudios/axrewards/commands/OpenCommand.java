@@ -12,7 +12,7 @@ public class OpenCommand extends Command {
     public OpenCommand(List<String> aliases, Menu menu) {
         this.aliases = new ArrayList<>(aliases);
         this.command = new CommandAPICommand(aliases.get(0))
-                .withAliases(aliases.subList(1, aliases.size() - 1).toArray(String[]::new))
+                .withAliases(aliases.subList(1, aliases.size()).toArray(String[]::new))
                 .executesPlayer((sender, args) -> {
                     Open.INSTANCE.execute(sender, menu);
                 })

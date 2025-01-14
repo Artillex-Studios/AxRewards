@@ -14,7 +14,6 @@ public abstract class Command {
     }
 
     public void unregister() {
-        System.out.println(aliases);
         CommandAPIBukkit.unregister(aliases.get(0), true, true);
     }
 }
