@@ -9,6 +9,7 @@ import com.artillexstudios.axapi.libs.boostedyaml.boostedyaml.settings.general.G
 import com.artillexstudios.axapi.libs.boostedyaml.boostedyaml.settings.loader.LoaderSettings;
 import com.artillexstudios.axapi.libs.boostedyaml.boostedyaml.settings.updater.UpdaterSettings;
 import com.artillexstudios.axapi.libs.libby.BukkitLibraryManager;
+import com.artillexstudios.axapi.metrics.AxMetrics;
 import com.artillexstudios.axapi.utils.MessageUtils;
 import com.artillexstudios.axapi.utils.StringUtils;
 import com.artillexstudios.axapi.utils.featureflags.FeatureFlags;
@@ -40,6 +41,7 @@ public final class AxRewards extends AxPlugin {
     private static Database database;
     public static BukkitAudiences BUKKITAUDIENCES;
     private static Placeholders placeholderParser;
+    private static AxMetrics metrics;
 
     public static ThreadedQueue<Runnable> getThreadedQueue() {
         return threadedQueue;
@@ -114,12 +116,16 @@ public final class AxRewards extends AxPlugin {
 
         CommandManager.load();
 
+        metrics = new AxMetrics(42);
+        metrics.start();
+
         Bukkit.getConsoleSender().sendMessage(StringUtils.formatToString("&#FFEE00[AxRewards] Loaded plugin! Using &f" + database.getType() + " &#FFEE00database to store data!"));
 
         if (CONFIG.getBoolean("update-notifier.enabled", true)) new UpdateNotifier(this, 5549);
     }
 
     public void disable() {
+        metrics.cancel();
         GuiUpdater.stop();
         database.disable();
     }
