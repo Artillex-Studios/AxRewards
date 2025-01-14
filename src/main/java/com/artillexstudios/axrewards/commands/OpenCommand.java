@@ -14,7 +14,7 @@ public class OpenCommand implements OrphanCommand {
         this.menu = menu;
     }
 
-    @DefaultFor({"~", "~ open"})
+    @DefaultFor({"~"})
     public void open(@NotNull Player sender) {
         Open.INSTANCE.execute(sender, menu);
     }

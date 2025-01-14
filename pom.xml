@@ -6,7 +6,7 @@
 
     <groupId>com.artillexstudios</groupId>
     <artifactId>AxRewards</artifactId>
-    <version>3.2.0</version>
+    <version>3.3.0</version>
     <packaging>jar</packaging>
 
     <name>AxRewards</name>
@@ -108,14 +108,14 @@
         <dependency>
             <groupId>com.artillexstudios.axapi</groupId>
             <artifactId>axapi</artifactId>
-            <version>1.4.435</version>
+            <version>1.4.513</version>
             <scope>compile</scope>
             <classifier>all</classifier>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.18.2-R0.1-SNAPSHOT</version>
+            <version>1.19.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -133,7 +133,7 @@
         <dependency>
             <groupId>dev.triumphteam</groupId>
             <artifactId>triumph-gui</artifactId>
-            <version>3.1.10</version>
+            <version>3.1.11</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -188,13 +188,13 @@
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>5.1.0</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>commons-dbutils</groupId>
             <artifactId>commons-dbutils</artifactId>
             <version>1.8.1</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

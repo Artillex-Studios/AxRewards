@@ -1,7 +1,7 @@
 package com.artillexstudios.axrewards.commands;
 
-import com.artillexstudios.axapi.utils.StringUtils;
 import com.artillexstudios.axrewards.commands.subcommands.ForceOpen;
+import com.artillexstudios.axrewards.commands.subcommands.Help;
 import com.artillexstudios.axrewards.commands.subcommands.Open;
 import com.artillexstudios.axrewards.commands.subcommands.Reload;
 import com.artillexstudios.axrewards.commands.subcommands.Reset;
@@ -17,16 +17,12 @@ import revxrsal.commands.annotation.Subcommand;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 import revxrsal.commands.orphan.OrphanCommand;
 
-import static com.artillexstudios.axrewards.AxRewards.LANG;
-
 public class Commands implements OrphanCommand {
 
     @DefaultFor({"~", "~ help"})
     @CommandPermission("axrewards.help")
     public void help(@NotNull CommandSender sender) {
-        for (String m : LANG.getStringList("help")) {
-            sender.sendMessage(StringUtils.formatToString(m));
-        }
+        Help.INSTANCE.execute(sender);
     }
 
     @Subcommand("open")
