@@ -21,11 +21,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.WeakHashMap;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 import static com.artillexstudios.axrewards.AxRewards.CONFIG;
@@ -108,10 +104,76 @@ public class RewardGui extends GuiFrame {
                     AxRewards.getDatabase().claimReward(player, reward);
 
                     Scheduler.get().run(scheduledTask -> {
+                        List<String> finalCommands = new ArrayList<>();
+                        List<String> randomBlockCommands = new ArrayList<>();
+                        boolean inRandomBlock = false;
+                        int randomCount = 1;
+                        boolean canRepeat = false;
                         for (String command : reward.claimCommands()) {
-                            command = command.replace("%player%", player.getName());
-                            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), AxRewards.getPlaceholderParser().setPlaceholders(player, command));
+                            String trimmed = command.trim();
+                            if (trimmed.toUpperCase().startsWith("RANDOM START")) {
+                                inRandomBlock = true;
+                                String[] parts = trimmed.split("\\s+");
+                                if (parts.length >= 3) {
+                                    try {
+                                        randomCount = Integer.parseInt(parts[2]);
+                                    } catch (NumberFormatException e) {
+                                        randomCount = 1;
+                                    }
+                                } else {
+                                    randomCount = 1;
+                                }
+                                if (parts.length >= 4) {
+                                    canRepeat = Boolean.parseBoolean(parts[3]);
+                                } else {
+                                    canRepeat = false;
+                                }
+                                continue;
+                            }
+                            if (trimmed.toUpperCase().startsWith("RANDOM END")) {
+                                inRandomBlock = false;
+                                if (!randomBlockCommands.isEmpty()) {
+                                    List<String> chosen = new ArrayList<>();
+                                    if (!canRepeat) {
+                                        int selectionCount = Math.min(randomCount, randomBlockCommands.size());
+                                        Collections.shuffle(randomBlockCommands);
+                                        chosen.addAll(randomBlockCommands.subList(0, selectionCount));
+                                    } else {
+                                        Random random = new Random();
+                                        for (int i = 0; i < randomCount; i++) {
+                                            chosen.add(randomBlockCommands.get(random.nextInt(randomBlockCommands.size())));
+                                        }
+                                    }
+                                    finalCommands.addAll(chosen);
+                                    randomBlockCommands.clear();
+                                }
+                                continue;
+                            }
+                            if (inRandomBlock) {
+                                randomBlockCommands.add(trimmed);
+                            } else {
+                                finalCommands.add(trimmed);
+                            }
                         }
+                        if (inRandomBlock && !randomBlockCommands.isEmpty()) {
+                            List<String> chosen = new ArrayList<>();
+                            if (!canRepeat) {
+                                int selectionCount = Math.min(randomCount, randomBlockCommands.size());
+                                Collections.shuffle(randomBlockCommands);
+                                chosen.addAll(randomBlockCommands.subList(0, selectionCount));
+                            } else {
+                                Random random = new Random();
+                                for (int i = 0; i < randomCount; i++) {
+                                    chosen.add(randomBlockCommands.get(random.nextInt(randomBlockCommands.size())));
+                                }
+                            }
+                            finalCommands.addAll(chosen);
+                        }
+                        for (String cmd : finalCommands) {
+                            cmd = cmd.replace("%player%", player.getName());
+                            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), AxRewards.getPlaceholderParser().setPlaceholders(player, cmd));
+                        }
+
                         for (Map<?, ?> map : reward.claimItems()) {
                             ItemStack it = new ItemBuilder((Map<Object, Object>) map).get();
                             ContainerUtils.INSTANCE.addOrDrop(player.getInventory(), List.of(it), player.getLocation());
