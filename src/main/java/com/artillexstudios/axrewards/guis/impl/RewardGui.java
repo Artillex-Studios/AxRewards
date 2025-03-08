@@ -57,6 +57,11 @@ public class RewardGui extends GuiFrame {
                 super.createItem("close", "close", event -> {
                     Scheduler.get().runAt(player.getLocation(), scheduledTask -> {
                         player.closeInventory();
+                        if (file.getSection("close").getStringList("commands") != null) {
+                            for (String command : file.getSection("close").getStringList("commands")) {
+                                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), AxRewards.getPlaceholderParser().setPlaceholders(player, command));
+                            }
+                        }
                     });
                 });
             }
