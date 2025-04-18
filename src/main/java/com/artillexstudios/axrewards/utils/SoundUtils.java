@@ -1,6 +1,6 @@
 package com.artillexstudios.axrewards.utils;
 
-import com.artillexstudios.axapi.libs.boostedyaml.boostedyaml.block.implementation.Section;
+import com.artillexstudios.axapi.libs.boostedyaml.block.implementation.Section;
 import com.artillexstudios.axapi.utils.StringUtils;
 import net.kyori.adventure.key.InvalidKeyException;
 import net.kyori.adventure.key.Key;

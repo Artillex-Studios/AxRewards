@@ -1,6 +1,6 @@
 package com.artillexstudios.axrewards.utils;
 
-import com.artillexstudios.axapi.libs.boostedyaml.boostedyaml.block.implementation.Section;
+import com.artillexstudios.axapi.libs.boostedyaml.block.implementation.Section;
 import com.artillexstudios.axapi.utils.ItemBuilder;
 import com.artillexstudios.axrewards.AxRewards;
 import org.bukkit.entity.Player;

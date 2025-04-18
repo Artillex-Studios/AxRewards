@@ -1,7 +1,7 @@
 package com.artillexstudios.axrewards.guis.data;
 
 import com.artillexstudios.axapi.config.Config;
-import com.artillexstudios.axapi.libs.boostedyaml.boostedyaml.block.implementation.Section;
+import com.artillexstudios.axapi.libs.boostedyaml.block.implementation.Section;
 import com.artillexstudios.axapi.utils.ItemBuilder;
 import com.artillexstudios.axrewards.AxRewards;
 import com.artillexstudios.axrewards.guis.impl.RewardGui;

@@ -1,7 +1,7 @@
 name: AxRewards
 version: '${project.version}'
 main: com.artillexstudios.axrewards.AxRewards
-api-version: '1.18'
+api-version: '1.20'
 folia-supported: true
 
 permissions:

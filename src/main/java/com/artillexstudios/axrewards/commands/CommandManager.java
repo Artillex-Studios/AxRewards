@@ -1,7 +1,6 @@
 package com.artillexstudios.axrewards.commands;
 
 import com.artillexstudios.axapi.config.Config;
-import com.artillexstudios.axapi.nms.NMSHandlers;
 import com.artillexstudios.axapi.utils.StringUtils;
 import com.artillexstudios.axrewards.AxRewards;
 import com.artillexstudios.axrewards.guis.data.Menu;
@@ -9,11 +8,7 @@ import com.artillexstudios.axrewards.guis.data.MenuManager;
 import com.artillexstudios.axrewards.guis.data.Reward;
 import com.artillexstudios.axrewards.utils.CommandMessages;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.HumanEntity;
-import revxrsal.commands.bukkit.BukkitCommandActor;
 import revxrsal.commands.bukkit.BukkitCommandHandler;
-import revxrsal.commands.bukkit.exception.InvalidPlayerException;
 import revxrsal.commands.core.CommandPath;
 import revxrsal.commands.exception.CommandErrorException;
 import revxrsal.commands.orphan.OrphanRegistry;
@@ -23,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.artillexstudios.axrewards.AxRewards.CONFIG;
 
@@ -40,20 +34,6 @@ public class CommandManager {
             return cfg.getBackingDocument().getRoutesAsStrings(false).stream().filter(string -> cfg.getSection(string) != null).toList();
         });
         handler.getAutoCompleter().registerSuggestion("menus", (args, sender, command) -> MenuManager.getMenus().keySet());
-
-        handler.registerValueResolver(0, OfflinePlayer.class, context -> {
-            String value = context.pop();
-            if (value.equalsIgnoreCase("self") || value.equalsIgnoreCase("me"))
-                return ((BukkitCommandActor) context.actor()).requirePlayer();
-            OfflinePlayer player = NMSHandlers.getNmsHandler().getCachedOfflinePlayer(value);
-            if (player == null && !(player = Bukkit.getOfflinePlayer(value)).hasPlayedBefore())
-                throw new InvalidPlayerException(context.parameter(), value);
-            return player;
-        });
-
-        handler.getAutoCompleter().registerParameterSuggestions(OfflinePlayer.class, (args, sender, command) -> {
-            return Bukkit.getOnlinePlayers().stream().map(HumanEntity::getName).collect(Collectors.toSet());
-        });
 
         handler.registerValueResolver(Menu.class, resolver -> {
             final String str = resolver.popForParameter();
