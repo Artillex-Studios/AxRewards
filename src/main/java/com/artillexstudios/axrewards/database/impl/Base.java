@@ -10,6 +10,7 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 import org.bukkit.OfflinePlayer;
 
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
@@ -151,11 +152,11 @@ public abstract class Base implements Database {
 
     @Override
     public int getPlayerId(OfflinePlayer player) {
-        ScalarHandler<Integer> scalarHandler = new ScalarHandler<>();
+        ScalarHandler<Number> scalarHandler = new ScalarHandler<>();
         try (Connection conn = getConnection()) {
             Number id = runner.query(conn, SELECT_PLAYER_BY_UUID, scalarHandler, player.getUniqueId().toString());
             if (id != null) return id.intValue();
-            return runner.insert(conn, INSERT_PLAYER, scalarHandler, player.getUniqueId().toString(), player.getName());
+            return runner.insert(conn, INSERT_PLAYER, scalarHandler, player.getUniqueId().toString(), player.getName()).intValue();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
