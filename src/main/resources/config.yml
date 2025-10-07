@@ -1,6 +1,6 @@
 # DOCUMENTATION: https://docs.artillex-studios.com/axrewards.html
 
-prefix: "&#FFEE00&lAxRewards &7» "
+prefix: "<gradient:#FFEE00:#FFFF00><b>AxRewards</b></gradient> &7» "
 
 database:
   # supported databases:

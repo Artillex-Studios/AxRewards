@@ -52,10 +52,10 @@ public class MenuManager {
                         cd == -1 ? -1 : s.getLong("cooldown") * 1_000L,
                         s.getStringList("claim-commands"),
                         s.getMapList("claim-items"),
-                        new ItemBuilder(claimableSection).get(),
-                        new ItemBuilder(s.getSection("unclaimable")).get(),
+                        ItemBuilder.create(claimableSection).get(),
+                        ItemBuilder.create(s.getSection("unclaimable")).get(),
                         s.getString("permission", null),
-                        permissionItem == null ? null : new ItemBuilder(permissionItem).get()
+                        permissionItem == null ? null : ItemBuilder.create(permissionItem).get()
                 );
                 rewards.add(reward);
             }

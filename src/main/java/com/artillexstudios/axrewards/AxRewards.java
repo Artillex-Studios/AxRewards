@@ -26,7 +26,6 @@ import com.artillexstudios.axrewards.hooks.Placeholders;
 import com.artillexstudios.axrewards.libraries.Libraries;
 import com.artillexstudios.axrewards.utils.FileUtils;
 import com.artillexstudios.axrewards.utils.UpdateNotifier;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import revxrsal.zapper.DependencyManager;
@@ -41,7 +40,6 @@ public final class AxRewards extends AxPlugin {
     private static AxPlugin instance;
     private static ThreadedQueue<Runnable> threadedQueue;
     private static Database database;
-    public static BukkitAudiences BUKKITAUDIENCES;
     private static Placeholders placeholderParser;
     private static AxMetrics metrics;
 
@@ -88,13 +86,12 @@ public final class AxRewards extends AxPlugin {
 
         threadedQueue = new ThreadedQueue<>("AxRewards-Datastore-thread");
 
-        BUKKITAUDIENCES = BukkitAudiences.create(this);
-
         if (FileUtils.PLUGIN_DIRECTORY.resolve("menus/").toFile().mkdirs()) {
-            if (new File(getDataFolder(), "guis.yml").exists())
+            if (new File(getDataFolder(), "guis.yml").exists()) {
                 new Converter2();
-            else
+            } else {
                 FileUtils.copyFromResource("menus");
+            }
         }
 
         MenuManager.reload();

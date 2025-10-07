@@ -2,11 +2,11 @@
 
 help:
   - " "
-  - "&#FFEE00&lAxRewards &7»"
-  - " &7- &f/axrewards open [menu] &7| &#FFEE00Open menu"
-  - " &7- &f/axrewards reload [commands] &7| &#FFEE00Reload plugin (and optionally, the commands)"
-  - " &7- &f/axrewards reset <player> [menu] [reward] &7| &#FFEE00Reset cooldowns of player"
-  - " &7- &f/axrewards forceopen <player> [menu] [bypass] &7| &#FFEE00Open the gui for a player"
+  - "<gradient:#FFEE00:#FFFF00><b>AxRewards</b></gradient> <#FFEE88>Help"
+  - " <#FFEE88>➤ <white>/axrewards open [menu] <#DDDDDD>| <#FFFFAA>Open menu"
+  - " <#FFEE88>➤ <white>/axrewards reload [commands] <#DDDDDD>| <#FFFFAA>Reload plugin (and optionally, the commands)"
+  - " <#FFEE88>➤ <white>/axrewards reset <player> [menu] [reward] <#DDDDDD>| <#FFFFAA>Reset cooldowns of player"
+  - " <#FFEE88>➤ <white>/axrewards forceopen <player> [menu] [bypass] <#DDDDDD>| <#FFFFAA>Open the gui for a player"
   - " "
 
 reload:

@@ -17,7 +17,6 @@ public class SQLUtils {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
         return false;
     }
 }

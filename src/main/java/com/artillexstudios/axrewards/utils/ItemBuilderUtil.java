@@ -20,7 +20,7 @@ public class ItemBuilderUtil {
 
     @NotNull
     public static ItemBuilder newBuilder(@Nullable Player player, @NotNull Section section, Map<String, String> replacements) {
-        final ItemBuilder builder = new ItemBuilder(section);
+        final ItemBuilder builder = ItemBuilder.create(section);
 
         section.getOptionalString("name").ifPresent((name) -> {
             name = AxRewards.getPlaceholderParser().setPlaceholders(player, name);
@@ -38,6 +38,6 @@ public class ItemBuilderUtil {
     @NotNull
     @Contract("_ -> new")
     public static ItemBuilder newBuilder(@NotNull ItemStack itemStack) {
-        return new ItemBuilder(itemStack);
+        return ItemBuilder.create(itemStack);
     }
 }

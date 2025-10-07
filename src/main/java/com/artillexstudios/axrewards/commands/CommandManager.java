@@ -43,7 +43,6 @@ public class CommandManager {
         });
 
         handler.registerValueResolver(Reward.class, resolver -> {
-
             String str = resolver.popForParameter();
             String[] spl = str.split("-");
             String last = spl[0];
@@ -69,7 +68,7 @@ public class CommandManager {
         });
 
         handler.getTranslator().add(new CommandMessages());
-        handler.setLocale(new Locale("en", "US"));
+        handler.setLocale(Locale.of("en", "US"));
 
         handler.register(Orphans.path(CONFIG.getStringList("command-aliases").toArray(String[]::new)).handler(new Commands()));
         handler.registerBrigadier();
