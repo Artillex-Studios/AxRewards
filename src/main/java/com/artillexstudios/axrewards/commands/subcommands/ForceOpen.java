@@ -13,7 +13,7 @@ public enum ForceOpen {
 
     public void execute(CommandSender sender, Player player, @Nullable Menu menu, @Nullable Boolean force) {
         if (force == null) force = false;
-        if ((menu = MenuManager.getFallBack()) == null) {
+        if (menu == null && (menu = MenuManager.getFallBack()) == null) {
             MESSAGEUTILS.sendLang(sender, "errors.no-menus");
             return;
         }
