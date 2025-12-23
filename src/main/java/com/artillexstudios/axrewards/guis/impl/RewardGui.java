@@ -12,6 +12,7 @@ import com.artillexstudios.axrewards.guis.data.MenuManager;
 import com.artillexstudios.axrewards.guis.data.Reward;
 import com.artillexstudios.axrewards.utils.SoundUtils;
 import com.artillexstudios.axrewards.utils.TimeUtils;
+import dev.triumphteam.gui.builder.gui.BaseGuiBuilder;
 import dev.triumphteam.gui.components.GuiType;
 import dev.triumphteam.gui.guis.BaseGui;
 import dev.triumphteam.gui.guis.Gui;
@@ -42,13 +43,21 @@ public class RewardGui extends GuiFrame {
         super(menu.settings(), player);
         this.player = player;
         this.menu = menu;
-        this.gui = Gui
-                .gui(GuiType.valueOf(file.getString("type", "CHEST")))
-                .disableAllInteractions()
+
+        GuiType guiType = GuiType.valueOf(file.getString("type", "CHEST"));
+
+        BaseGuiBuilder<?, ?> builder;
+        if (guiType == GuiType.CHEST) {
+            builder = Gui.gui().rows(file.getInt("rows", 6));
+        } else {
+            builder = Gui.gui(guiType);
+        }
+
+        gui = builder.disableAllInteractions()
                 .title(Component.empty())
-                .rows(file.getInt("rows", 6))
                 .create();
-        gui.updateTitle(StringUtils.formatToString(AxRewards.getPlaceholderParser().setPlaceholders(player, file.getString("title"))));
+
+        gui.updateTitle(StringUtils.format(AxRewards.getPlaceholderParser().setPlaceholders(player, file.getString("title"))));
         setGui(gui);
     }
 
