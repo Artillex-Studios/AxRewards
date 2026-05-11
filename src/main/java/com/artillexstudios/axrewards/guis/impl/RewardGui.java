@@ -74,6 +74,17 @@ public class RewardGui extends GuiFrame {
                 });
             }
 
+            for (String route : file.getBackingDocument().getRoutesAsStrings(false)) {
+                String openMenuName = file.getString(route + ".open-menu");
+                if (openMenuName == null) continue;
+                String finalOpenMenuName = openMenuName;
+                super.createItem(route, route, event -> {
+                    Menu targetMenu = MenuManager.getMenus().get(finalOpenMenuName);
+                    if (targetMenu == null) return;
+                    MenuManager.openMenu(player, targetMenu, true);
+                });
+            }
+
             for (Reward reward : menu.rewards()) {
                 String permission = reward.claimPermission();
                 if (permission != null && !player.hasPermission(permission)) {
