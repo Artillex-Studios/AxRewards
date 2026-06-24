@@ -21,13 +21,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 import static com.artillexstudios.axrewards.AxRewards.CONFIG;
 import static com.artillexstudios.axrewards.AxRewards.LANG;
@@ -142,11 +145,23 @@ public class RewardGui extends GuiFrame {
 
             gui.setCloseGuiAction(e -> openMenus.remove(this));
 
-            Scheduler.get().run(t -> {
+            runOnPlayerScheduler(() -> {
                 gui.open(player);
                 openMenus.add(this);
             });
         });
+    }
+
+    private void runOnPlayerScheduler(Runnable action) {
+        try {
+            Object entityScheduler = player.getClass().getMethod("getScheduler").invoke(player);
+            entityScheduler.getClass().getMethod("run", Plugin.class, Consumer.class, Runnable.class)
+                    .invoke(entityScheduler, AxRewards.getInstance(), (Consumer<Object>) task -> action.run(), null);
+        } catch (NoSuchMethodException exception) {
+            Scheduler.get().run(t -> action.run());
+        } catch (IllegalAccessException | InvocationTargetException exception) {
+            throw new RuntimeException("Failed to schedule player GUI action", exception);
+        }
     }
 
     public void updateTitle() {
