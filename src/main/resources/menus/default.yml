@@ -21,6 +21,7 @@ close:
   slot: 22
   material: "BARRIER"
   name: "&#FFEE00&lᴄʟᴏsᴇ"
+  commands: []
   lore:
     - " "
     - "&#FFEE00&lClick &#DDDDDD» &#FFEEAAClose Gui"
